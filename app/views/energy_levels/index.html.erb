@@ -12,7 +12,7 @@
 <% @energy_levels.each do |energy_level| %>
   <tr>
     <td><%= energy_level.name %></td>
-    <td><%= energy_level.level %></td>
+    <td><%= energy_level.elevel %></td>
     <td><%= link_to 'Show', energy_level %></td>
     <td><%= link_to 'Edit', edit_energy_level_path(energy_level) %></td>
     <td><%= link_to 'Destroy', energy_level, :confirm => 'Are you sure?', :method => :delete %></td>

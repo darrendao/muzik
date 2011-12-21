@@ -3,11 +3,13 @@
   <% energy_levels = %w{high medium low} %>
   <div>
     Energy Level:
-    <%= f.select(:energy_level, energy_levels) %>
+    <%= f.select :energy_level_id, EnergyLevel.order('elevel').collect{|e| [ "#{e.name}(#{e.elevel})", e.id]} %>
   </div>
   <div>
     Song:
+    <!--
     <%= autocomplete_field_tag 'song', '', '/songs/autocomplete_song_title', :size => 75 %>
+    -->
     <%= f.select(:song_id, song_array, { :include_blank => true}) %>
   </div>
   <%= f.hidden_field( :group_id, { :value => @group.id } ) %>

@@ -1,0 +1,8 @@
+require '../lib/playlist_generator'
+
+gen = PlaylistGenerator.new
+group = Group.find(1)
+playlist = gen.generate(group, 39600, 53900)
+playlist.sort.each do |time, song|
+  puts "#{time} ==> #{song.title} #{song.artist} #{group.energy_level_of(song.id).name}"
+end

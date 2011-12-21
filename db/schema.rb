@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(:version => 20111221025307) do
 
   create_table "energy_levels", :force => true do |t|
     t.string   "name"
-    t.integer  "level"
+    t.integer  "elevel"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(:version => 20111221025307) do
   create_table "group_song_assignments", :force => true do |t|
     t.integer  "song_id"
     t.integer  "group_id"
-    t.string   "energy_level"
+    t.integer  "energy_level_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -1,0 +1,62 @@
+# Create energy level
+energy_levels = []
+{'low' => 1, 'medium' => 2, 'high' => 3}.each do |key, value|
+  e = EnergyLevel.new
+  e.name = key
+  e.elevel = value
+  e.save
+  energy_levels << e
+end
+
+# Create song
+songs = []
+(1..5000).each do |i|
+  s = Song.new
+  s.title = "title #{rand(1000)} #{rand(1000)}"
+  s.artist = "artist #{rand(3000)}"
+  s.album = "album #{rand(1000)}"
+  s.duration = 300 + rand(1000)
+  songs << s
+  s.save
+end
+
+# Create group
+(1..10).each do |i|
+  a = Group.new(:name => "Group #{i}")
+  (1..100).each do |j|
+    song = songs[rand(5000)]
+    gsa = GroupSongAssignment.new
+    gsa.song_id = song.id
+    gsa.energy_level_id = rand(3) + 1
+    a.group_song_assignments << gsa
+  end
+
+  eli = EnergyLevelInterval.new
+  eli.energy_level_id = 1
+  eli.start_at = "8:00"
+  eli.end_at = "12:00"
+  a.energy_level_intervals << eli
+
+  eli = EnergyLevelInterval.new
+  eli.energy_level_id = 2
+  eli.start_at = "12:00"
+  eli.end_at = "15:00"
+  a.energy_level_intervals << eli
+
+  eli = EnergyLevelInterval.new
+  eli.energy_level_id = 3
+  eli.start_at = "15:00"
+  eli.end_at = "19:00"
+  a.energy_level_intervals << eli
+
+  a.save
+end
+
+# Create location
+(1..500).each do |i|
+  l = Location.new(:address => "#{rand(10000)} address#{i} CA 92351",
+                   :phone_number => "#{rand(999)}-#{rand(999)}-#{rand(9990)}",
+                   :group_id => rand(10)
+                   )
+  l.save
+end

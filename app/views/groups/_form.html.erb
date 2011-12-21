@@ -20,7 +20,7 @@
     Energy Level Intervals:<br/>
     <%= f.fields_for :energy_level_intervals do |ff| %>
       <%= ff.text_field :start_at, :class => 'timefield' %> to <%= ff.text_field :end_at, :class => 'timefield' %>
-      <%= ff.select :energy_level_id, EnergyLevel.order('level').collect{|e| [e.name, e.id]} %><br/>
+      <%= ff.select :energy_level_id, EnergyLevel.order('elevel').collect{|e| [ "#{e.name}(#{e.elevel})", e.id]} %><br/>
     <% end %>
   </div>
 

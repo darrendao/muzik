@@ -130,6 +130,7 @@ class GroupsController < ApplicationController
   end
 
   def gen_playlist
-
+    group_id = params[:group_id]
+    num_day = params[:num_day]
   end
 end
