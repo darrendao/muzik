@@ -1,0 +1,37 @@
+<%= form_for(@group) do |f| %>
+  <% if @group.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@group.errors.count, "error") %> prohibited this group from being saved:</h2>
+
+      <ul>
+      <% @group.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="field">
+    Energy Level Intervals:<br/>
+    <%= f.fields_for :energy_level_intervals do |ff| %>
+      <%= ff.text_field :start_at, :class => 'timefield' %> to <%= ff.text_field :end_at, :class => 'timefield' %>
+      <%= ff.select :energy_level_id, EnergyLevel.order('level').collect{|e| [e.name, e.id]} %><br/>
+    <% end %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+
+<script type="text/javascript">
+  $(".timefield").AnyTime_picker(
+    { format: "%H:%i", labelTitle: "Hour",
+      labelHour: "Hour", labelMinute: "Minute" } );
+</script>

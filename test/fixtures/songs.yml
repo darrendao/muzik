@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  title: MyString
+  artist: MyString
+  length: 9.99
+  energy_level: MyString
+  checksum: MyString
+  filename: MyString
+
+two:
+  title: MyString
+  artist: MyString
+  length: 9.99
+  energy_level: MyString
+  checksum: MyString
+  filename: MyString

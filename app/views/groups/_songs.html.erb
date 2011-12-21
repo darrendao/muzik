@@ -1,0 +1,35 @@
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#songstable").dataTable({
+                                       "bJQueryUI"       : true,
+                                       "aoColumn"        : [{"bSortable":false}],
+                                       "sPaginationType": "full_numbers",
+                                       "aaSorting"       : [[1, 'asc']]
+                                      });
+    });
+</script>
+<h3>Song Library</h3>
+<% if @group.group_song_assignments.nil? %>
+  There are no songs assigned to this group.<br/>
+<% else %>
+<table class="display" id="songstable">
+  <thead>
+  <tr>
+    <th></th>
+    <th>Title</th>
+    <th>Artist</th>
+    <th>Energy Level</th>
+  </tr>
+  </thead>
+  <tbody>
+ <% @group.group_song_assignments.each do |ga| %>
+  <tr>
+    <td><a href="#">Remove</a></td>
+    <td><%= ga.song.title %></td>
+    <td><%= ga.song.artist %></td>
+    <td><%= ga.energy_level %></td>
+  </tr>
+<% end %>
+  </tbody>
+</table>
+<% end %>

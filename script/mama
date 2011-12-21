@@ -1,0 +1,24 @@
+#puts Location.all.inspect
+require 'rubygems'
+require 'mp3info'
+
+file = File.new("lib.xml", "r")
+duration = artist = id = album = title = nil
+while (line = file.gets)
+  if line =~ /Artist<\/key><string>(.+)</
+    artist = $1
+  elsif line =~ /Name<\/key><string>(.+)</
+    title =$1
+  elsif line =~ /Total Time<\/key><integer>(.+)</
+    duration = $1.to_i/1000.0
+  elsif line =~ /Album<\/key><string>(.+)</
+    album =$1
+  elsif line =~ /Persistent ID<\/key><string>(.+)</
+    id = $1
+  elsif line =~ /Library Folder Count/
+    a = Song.new(:title => title, :artist => artist, :duration => duration, :album => album, :checksum => id)
+    a.save
+    puts "#{title}  by #{artist} -- #{duration} sec in #{album}"
+  end
+end
+file.close

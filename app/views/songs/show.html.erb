@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Title:</b>
+  <%= @song.title %>
+</p>
+
+<p>
+  <b>Artist:</b>
+  <%= @song.artist %>
+</p>
+
+<p>
+  <b>Album Title:</b>
+  <%= @song.album.inspect %>
+</p>
+
+<p>
+  <b>Duration:</b>
+  <%= @song.duration %>
+</p>
+
+<p>
+  <b>Checksum:</b>
+  <%= @song.checksum %>
+</p>
+
+<p>
+  <b>Mp3:</b>
+  <%= @song.mp3_file_name %>
+</p>
+
+
+<%= link_to 'Edit', edit_song_path(@song) %> |
+<%= link_to 'Back', songs_path %>

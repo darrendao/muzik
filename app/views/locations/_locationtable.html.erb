@@ -1,0 +1,66 @@
+<script type="text/javascript">
+  var gaiSelected =  [];
+  var oTable;
+  $(document).ready(function() {
+    oTable = $("#locationtable").dataTable({
+               "bProcessing"     : true,
+               "bServerSide"     : true,
+               "bJQueryUI"       : true,
+               "sPaginationType" : "full_numbers",
+               "aoColumnDefs"    : [{"bVisible":false, "aTargets":[0]}, {"bSortable":false, "aTargets":[1]}],
+               "aaSorting"       : [[2, 'asc']],
+               "fnRowCallback"   : function( nRow, aData, iDisplayIndex ) {
+       			  if ( jQuery.inArray(aData[0], gaiSelected) != -1 )
+       			  {
+	       			$(nRow).addClass('row_selected');
+		       	  }
+                  return nRow;
+               },
+               "sAjaxSource"     : "/locations/datatable.json" });
+
+    /* Click event handler */
+    $('#locationtable tbody tr').live('click', function () {
+      var aData = oTable.fnGetData( this );
+      var iId = aData[0];
+
+      if ( jQuery.inArray(iId, gaiSelected) == -1 )
+      {
+        gaiSelected[gaiSelected.length++] = iId;
+      }
+      else
+      {
+        gaiSelected = jQuery.grep(gaiSelected, function(value) {
+          return value != iId;
+          } );
+		}
+      $(this).toggleClass('row_selected');
+	} );
+
+    $('#delete_locations').click( function() {
+      $.ajax({
+              type: "GET",
+              url: "/locations/delete",
+              data: "location_ids="+gaiSelected,
+              success: function(data){
+                  gaiSelected =  [];
+                  oTable.fnDraw();
+              }
+            });
+      return false;
+	} );
+  });
+</script>
+
+<table class="display" id="locationtable">
+  <thead>
+  <tr>
+    <th>id</th>
+    <th></th>
+    <th>Address</th>
+    <th>Phone number</th>
+    <th>Contact name</th>
+  </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>

@@ -1,0 +1,8 @@
+<h3>Energy Level Intervals</h3>
+<% if @group.energy_level_intervals.empty? %>
+  N/A
+<% else %>
+  <% @group.energy_level_intervals.each do |interval| %>
+    Energy level is <%= interval.energy_level.name %> from <%= interval.start_at.strftime("%H:%M") %> to <%= interval.end_at.strftime("%H:%M") %><br/>
+  <% end %>
+<% end %>

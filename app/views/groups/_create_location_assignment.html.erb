@@ -1,0 +1,8 @@
+<%= form_tag '/groups/add_location', :method => :post, :remote => true do %>
+  <%= hidden_field_tag 'group_id', @group.id %>
+  <%= hidden_field_tag 'action', 'add' %>
+  <% location_array = Location.order('address').collect {|s| [s.address, s.id]} %>
+  Location: <%= select_tag "location", options_for_select(location_array)%>
+  <%= submit_tag "Assign" %>
+  | <%= link_to_function 'Cancel', "$('#create_location_assignment').hide(); $('#add_location_link').show()" %>
+<% end %>

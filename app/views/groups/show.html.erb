@@ -1,0 +1,32 @@
+<p id="notice"><%= notice %></p>
+
+<h1><%= @group.name %></h1>
+
+<div id="energy_level_intervals">
+  <%= render :partial => 'energy_level_intervals' %>
+</div>
+<div id="locations">
+  <%= render :partial => 'locations' %>
+</div>
+<div id="create_location_assignment" style="display:none">
+  <%= render :partial => 'create_location_assignment' %>
+</div>
+<div id="add_location_link">
+  <%= link_to_function 'Add Location', "$('#create_location_assignment').show(); $('#add_location_link').hide()" %>
+</div>
+<br/>
+<div id="songs">
+  <%= render :partial => 'songs' %>
+</div>
+<div id="create_song_assignment" style="display:none">
+  <%= render :partial => 'create_song_assignment' %>
+</div>
+<div id="add_song_link">
+  <%= link_to_function 'Add Song', "$('#create_song_assignment').show(); $('#add_song_link').hide()" %>
+</div>
+<br/>
+
+<%= link_to 'Edit', edit_group_path(@group) %> |
+<%= link_to 'Back', groups_path %>
+
+<%= javascript_tag "Element.hide('create_location_assignment')" %>

@@ -1,0 +1,31 @@
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#songtable").dataTable({
+                                "bProcessing"     : true,
+                                "bJQueryUI"       : true,
+                                "bAutoWidth"      : false,
+                                "sPaginationType" : "full_numbers",
+                                "aoColumn"        : [{"bSortable":false}, null, null, null, null],
+                                "aaSorting"       : [[1, 'asc']],
+                                "bServerSide"     : true,
+                                "sAjaxSource"     : "/songs/datatable.json" }).fnSetFilteringDelay();
+  });
+</script>
+
+<h1>Master Song List</h1>
+
+<table id="songtable" class="display">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Title</th>
+      <th>Artist</th>
+      <th>Album</th>
+      <th>Duration</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+
+<%= link_to 'New Song', new_song_path %>

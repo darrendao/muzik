@@ -1,0 +1,4 @@
+(1..40).each do |i|
+  a = Group.new(:name => "Group #{i}")
+  a.save
+end

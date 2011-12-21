@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Muzik</title>
+  <%= stylesheet_link_tag    "application" %>
+  <%= javascript_include_tag "application" %>
+  <%= stylesheet_link_tag    "jquery-ui-1.8.16.custom", "demo_table", "anytimec" %>
+  <%= javascript_include_tag "jquery-ui-1.8.16.custom.min", "jquery.dataTables.min", "anytimec" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+<%= yield %>
+
+</body>
+</html>

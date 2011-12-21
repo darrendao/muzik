@@ -1,0 +1,88 @@
+<script type="text/javascript">
+  var gaiSelected =  [];
+  var rowSelected = [];
+  var oTable;
+  $(document).ready(function() {
+    oTable = $("#grouptable").dataTable({
+                                 "aoColumn"        : [{"bSortable":false}],
+                                 "bJQueryUI"       : true,
+                                 "fnRowCallback"   : function( nRow, aData, iDisplayIndex ) {
+                    			    if ( jQuery.inArray(aData[0], gaiSelected) != -1 ){
+	       			                  $(nRow).addClass('row_selected');
+		       	                    }
+                                     return nRow;
+                                  },
+                                 "aoColumnDefs"    : [{"bVisible":false, "aTargets":[0]}, {"bSortable":false, "aTargets":[1]}],
+                                 "bProcessing"     : false,
+                                 "bServerSide"     : false,
+                                 "aaSorting"       : [[2, 'asc']]
+                               });
+    /* Click event handler */
+    $('#grouptable tbody tr').live('click', function () {
+      var aData = oTable.fnGetData( this );
+      var iId = aData[0];
+
+      if ( jQuery.inArray(iId, gaiSelected) == -1 ){
+        gaiSelected[gaiSelected.length++] = iId;
+      }
+      else{
+        gaiSelected = jQuery.grep(gaiSelected, function(value) {
+          return value != iId;
+          } );
+		}
+      $(this).toggleClass('row_selected');
+    } );
+
+    $('#delete_groups').click( function() {
+      $.ajax({
+              type: "GET",
+              url: "/groups/delete",
+              data: "group_ids="+gaiSelected,
+              success: function(data){
+                tobedeleted = fnGetSelected(oTable);
+                for(var x=0; x < tobedeleted.length; x++){
+                  oTable.fnDeleteRow(tobedeleted[x]);
+                }
+                gaiSelected =  [];
+                rowSelected = [];
+              }
+            });
+      return false;
+    } );
+  });
+
+  /* Get the rows which are currently selected */
+  function fnGetSelected(oTableLocal) {
+    var aReturn = new Array();
+    var aTrs = oTableLocal.fnGetNodes();
+
+    for ( var i=0 ; i<aTrs.length ; i++ ){
+      if ( $(aTrs[i]).hasClass('row_selected') ){
+        aReturn.push(aTrs[i]);
+      }
+    }
+    return aReturn;
+  }
+</script>
+
+<table class="display" id="grouptable">
+  <thead>
+  <tr>
+    <th>id</th>
+    <th></th>
+    <th>Name</th>
+    <th># Locations</th>
+  </tr>
+  </thead>
+  <tbody>
+ <% @groups.each do |group| %>
+  <tr>
+    <td><%= group.id %></td>
+    <td><%= link_to 'Show', group %> |
+        <%= link_to 'Edit', edit_group_path(group) %>
+    <td><%= group.name %></td>
+    <td><%= group.locations.size %></td>
+  </tr>
+<% end %>
+  </tbody>
+</table>

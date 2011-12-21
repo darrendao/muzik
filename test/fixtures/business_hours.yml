@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  schedulable_type: MyString
+  schedulable_id: 1
+  wday: 1
+  hour: 1
+  minute: 1
+  second: 1
+
+two:
+  schedulable_type: MyString
+  schedulable_id: 1
+  wday: 1
+  hour: 1
+  minute: 1
+  second: 1

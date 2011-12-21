@@ -1,0 +1,32 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Address:</b>
+  <%= @location.address %>
+</p>
+
+<p>
+  <b>Phone number:</b>
+  <%= @location.phone_number %>
+</p>
+
+<p>
+  <b>Contact name:</b>
+  <%= @location.contact_name %>
+</p>
+
+<p>
+  <b>Belongs to group:</b>
+  <%= @location.group.name if @location.group %>
+</p>
+
+<p>
+  <b>Business hours:</b><br/>
+  <% @location.business_hours.each do |business_hour| %>
+    <%= Date::ABBR_DAYNAMES[business_hour.wday] %> from <%= business_hour.open_at.strftime("%H:%M") %>
+      to <%= business_hour.close_at.strftime("%H:%M") %><br/>
+  <% end %>
+</p>
+
+<%= link_to 'Edit', edit_location_path(@location) %> |
+<%= link_to 'Back', locations_path %>

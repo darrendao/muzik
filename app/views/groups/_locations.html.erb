@@ -1,0 +1,34 @@
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#locationstable").dataTable({
+                                       "bJQueryUI"       : true,
+                                       "aoColumn"        : [{"bSortable":false}],
+                                       "sPaginationType": "full_numbers",
+                                       "aaSorting"       : [[1, 'asc']]
+                                      });
+    });
+</script>
+<h3>Locations</h3>
+<% if @group.locations.nil? %>
+  No location<br/>
+<% else %>
+<table class="display" id="locationstable">
+  <thead>
+  <tr>
+    <th></th>
+    <th>Address</th>
+    <th>Phone Number</th>
+  </tr>
+  </thead>
+  <tbody>
+ <% @group.locations.each do |location| %>
+  <tr>
+    <td><%= link_to 'Remove', {:action => 'remove_location', :group_id => @group.id, :location_id => location.id},
+                    :method => 'get', :remote => true, :confirm => "Are you sure?" %></td>
+    <td><%= location.address %></td>
+    <td><%= location.phone_number %></td>
+  </tr>
+<% end %>
+  </tbody>
+</table>
+<% end %>

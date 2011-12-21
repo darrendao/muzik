@@ -1,0 +1,16 @@
+<%= form_for :group_song_assignment, :url => {:controller => 'group_song_assignments', :action => 'create'}, :remote => true do |f| %>
+  <% song_array = Song.order('title').collect {|s| [s.title, s.id]} %>
+  <% energy_levels = %w{high medium low} %>
+  <div>
+    Energy Level:
+    <%= f.select(:energy_level, energy_levels) %>
+  </div>
+  <div>
+    Song:
+    <%= autocomplete_field_tag 'song', '', '/songs/autocomplete_song_title', :size => 75 %>
+    <%= f.select(:song_id, song_array, { :include_blank => true}) %>
+  </div>
+  <%= f.hidden_field( :group_id, { :value => @group.id } ) %>
+  <%= submit_tag "Assign" %>
+  | <%= link_to_function 'Cancel', "$('#create_song_assignment').hide(); $('#add_song_link').show()" %>
+<% end %>
