@@ -11,7 +11,7 @@ class Song < ActiveRecord::Base
       self.title = mp3_info.tag.title
       self.artist = mp3_info.tag.artist
       self.duration = mp3_info.length
-      self.album = mp3_info.tag.album
+      self.belongs_to_album = mp3_info.tag.album
     end
     self.checksum = Digest::MD5.file(tmp_path).hexdigest
   end

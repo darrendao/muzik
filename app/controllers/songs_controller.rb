@@ -75,7 +75,7 @@ class SongsController < ApplicationController
   # DELETE /songs/1.json
   def destroy
     @song = Song.find(params[:id])
-    @song.remove_file_path!
+    #@song.remove_file_path!
     @song.destroy
 
     respond_to do |format|
@@ -96,11 +96,11 @@ class SongsController < ApplicationController
   def datatable
     respond_to do |format|
       format.json do
-        render(:json => Song.for_data_table(self, %w(action title artist album duration), %w(title artist album duration)) do |song|
+        render(:json => Song.for_data_table(self, %w(action title artist belongs_to_album duration), %w(title artist belongs_to_album duration)) do |song|
           action_links = "<a href='/songs/#{song.id}'>View</a>" + " " +
                          "<a href='/songs/#{song.id}/edit'>Edit</a>" + " " +
                          "<a href='/songs/#{song.id}' data-confirm='Are you sure?' data-method='delete'>Delete</a>"
-          [action_links, song.title, song.artist, song.album, song.duration]
+          [action_links, song.title, song.artist, song.belongs_to_album, song.duration]
         end)
       end
     end
