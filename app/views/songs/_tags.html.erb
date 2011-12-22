@@ -1,0 +1,25 @@
+<b>Tags:</b>
+<span id="tag_list">
+  <%= render :partial => 'tag_list', :locals => { :tags => @song.tags } %>
+</span>
+
+<span id="add_tag_link">
+  <%= link_to_function 'Add Tag', "$('#add_tag').show(); $('#add_tag_link').hide()" %>
+</span>
+
+<div id="add_tag">
+  <%= form_for :song, :url => {:action => :add_tag, :id => @song.id }, :remote => true do %>
+    <%= select_tag(:tag, options_from_collection_for_select(ActsAsTaggableOn::Tag.all, "name", "name")) %>
+    <%= submit_tag "Add" %> | <%= link_to_function('Create New', "$('#new_tag').show(); $('#add_tag').hide()") %> | <%= link_to_function 'Cancel', "$('#add_tag').hide(); $('#add_tag_link').show()" %>
+  <% end %>
+</div>
+
+<div id="new_tag">
+  <%= form_for :song, :url => {:action => :add_tag, :id => @song.id }, :remote => true do %>
+    <%= text_field_tag :tag %>
+    <%= submit_tag "Add" %> | <%= link_to_function 'Cancel', "$('#new_tag').hide(); $('#add_tag_link').show()"%></p>
+  <% end %>
+</div>
+
+<%= javascript_tag "$('#add_tag').hide()" %>
+<%= javascript_tag "$('#new_tag').hide()" %>

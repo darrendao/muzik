@@ -4,6 +4,7 @@ class Song < ActiveRecord::Base
   #mount_uploader :file_path, SongUploader
   has_attached_file :mp3
   before_post_process :process_mp3
+  acts_as_taggable
 
   def process_mp3
     tmp_path = mp3.queued_for_write[:original].path

@@ -31,6 +31,7 @@ Muzik::Application.routes.draw do
       get 'upload'
       get 'datatable'
       get 'autocomplete_song_title'
+      post 'add_tag'
     end
   end
 

@@ -105,4 +105,13 @@ class SongsController < ApplicationController
       end
     end
   end
+
+  def add_tag
+    logger.info params.inspect
+    @song = Song.find(params[:id])
+    @song.tag_list << params[:tag].to_s
+    if @song.save
+    else
+    end
+  end
 end
