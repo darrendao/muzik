@@ -38,6 +38,9 @@ class GroupsController < ApplicationController
   # GET /groups/1/edit
   def edit
     @group = Group.find(params[:id])
+    (@group.energy_level_intervals.size..7).each do |i|
+      @group.energy_level_intervals.build
+    end
   end
 
   # POST /groups

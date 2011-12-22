@@ -9,8 +9,22 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-
-<%= yield %>
+  <div id="header">
+    <h2>Music Manager</h2>
+    <br/>
+    <div id="layoutdims">
+      Jump to:
+      <%= link_to "Energy Levels", energy_levels_path %> |
+      <%= link_to "Groups", groups_path %> |
+      <%= link_to "Locations", locations_path %> |
+      <%= link_to "Songs", songs_path %>
+    </div>
+  </div>
+  <div class="colmask fullpage">
+    <div class="col1">
+    <%= yield %>
+    </div>
+  </div>
 
 </body>
 </html>
