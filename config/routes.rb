@@ -1,4 +1,6 @@
 Muzik::Application.routes.draw do
+  resources :playlists
+
   resources :energy_levels
 
   resources :locations do
