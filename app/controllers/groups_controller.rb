@@ -98,6 +98,7 @@ class GroupsController < ApplicationController
     end
   end
 
+  # Handle ajax calls for removing locations from a group
   def remove_location
     @group = Group.find(params[:group_id])
     location = Location.where(:id => params[:location_id], :group_id => params[:group_id])
@@ -111,6 +112,7 @@ class GroupsController < ApplicationController
     end
   end
 
+  # Handle ajax calls for adding locations to a group
   def add_location
     location = Location.find(params[:location])
     location.group_id=params[:group_id]
@@ -122,6 +124,19 @@ class GroupsController < ApplicationController
     end
   end
 
+  def add_holiday_schedule
+    @group_holiday_schedule = GroupHolidaySchedule.new(params[:group_holiday_schedule])
+    @group = @group_holiday_schedule.group
+    respond_to do |format|
+      if @group_holiday_schedule.save
+        format.js { render 'update_holiday_schedules' }
+      else
+        format.js { render :json => @group.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+
+  # Method to handle ajax calls for deleting multiple groups
   def delete
     group_ids = params[:group_ids]
     group_ids.split(",").each do |group_id|

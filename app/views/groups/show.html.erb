@@ -28,12 +28,16 @@
   <%= link_to_function jquery_ui_button_icon("Add Song", "ui-icon-plusthick", "addsong").html_safe , "$('#create_song_assignment').show(); $('#add_song_link').hide()" %>
 </div>
 
-<div id="holiday_events">
-  <%= render :partial => 'holiday_events' %>
+<div id="holiday_schedules">
+  <%= render :partial => 'holiday_schedules' %>
+</div>
+<div id="add_holiday_schedule" style="display:none">
+  <%= render :partial => 'add_holiday_schedule' %>
+</div>
+<div id="add_holiday_schedule_link">
+  <%= link_to_function jquery_ui_button_icon("Add Holiday Schedules", "ui-icon-plusthick", "addhs").html_safe , "$('#add_holiday_schedule').show(); $('#add_holiday_schedule_link').hide()" %>
 </div>
 <br/>
 
 <%= link_to 'Edit', edit_group_path(@group) %> |
 <%= link_to 'Back', groups_path %>
-
-<%= javascript_tag "Element.hide('create_location_assignment')" %>

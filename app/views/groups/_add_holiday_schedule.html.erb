@@ -1,0 +1,12 @@
+<%= form_for :group_holiday_schedule, :url => '/groups/add_holiday_schedule', :method => :post, :remote => true do |f|%>
+  <%= hidden_field 'group_holiday_schedule', 'group_id', :value => @group.id %>
+  Name: <%= f.text_field 'name' %>
+  from <%= f.text_field 'start_date', :class=> 'datetimefield' %>
+  to <%= f.text_field 'end_date', :class=> 'datetimefield' %>
+  <%= f.submit "Add" %>
+  | <%= link_to_function 'Cancel', "$('#add_holiday_schedule').hide(); $('#add_holiday_schedule_link').show()" %>
+<% end %>
+
+<script type="text/javascript">
+  $(".datetimefield").AnyTime_picker();
+</script>

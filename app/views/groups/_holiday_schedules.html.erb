@@ -1,0 +1,4 @@
+<h3>Holiday Schedules</h3>
+<% @group.group_holiday_schedules.each do |h_sched| %>
+  <%= h_sched.name %> from <%= h_sched.start_date %> to <%= h_sched.end_date %><br/>
+<% end %>
