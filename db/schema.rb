@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111222143022) do
+ActiveRecord::Schema.define(:version => 20111223025038) do
 
   create_table "black_lists", :force => true do |t|
     t.integer  "location_id"
@@ -45,6 +45,15 @@ ActiveRecord::Schema.define(:version => 20111222143022) do
     t.datetime "updated_at"
   end
 
+  create_table "group_holiday_schedules", :force => true do |t|
+    t.integer  "group_id"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "group_song_assignments", :force => true do |t|
     t.integer  "song_id"
     t.integer  "group_id"
@@ -68,13 +77,21 @@ ActiveRecord::Schema.define(:version => 20111222143022) do
     t.datetime "updated_at"
   end
 
+  create_table "playlists", :force => true do |t|
+    t.integer  "group_id"
+    t.datetime "date"
+    t.text     "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "songs", :force => true do |t|
+    t.string   "belongs_to_album"
     t.string   "title"
     t.string   "artist"
     t.decimal  "duration"
     t.string   "checksum"
     t.string   "file_path"
-    t.string   "album"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "mp3_file_name"

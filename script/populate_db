@@ -14,8 +14,8 @@ songs = []
   s = Song.new
   s.title = "title #{rand(1000)} #{rand(1000)}"
   s.artist = "artist #{rand(3000)}"
-  s.album = "album #{rand(1000)}"
-  s.duration = 300 + rand(1000)
+  s.belongs_to_album = "album #{rand(1000)}"
+  s.duration = 300 + rand(200)
   songs << s
   s.save
 end
