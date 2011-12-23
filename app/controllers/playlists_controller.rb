@@ -1,3 +1,4 @@
+require 'lib/playlist_generator'
 class PlaylistsController < ApplicationController
   # GET /playlists
   # GET /playlists.json
@@ -24,8 +25,6 @@ class PlaylistsController < ApplicationController
   # GET /playlists/new
   # GET /playlists/new.json
   def new
-    @playlist = Playlist.new
-
     respond_to do |format|
       format.html # new.html.erb
       format.json { render :json => @playlist }
@@ -40,17 +39,13 @@ class PlaylistsController < ApplicationController
   # POST /playlists
   # POST /playlists.json
   def create
-    @playlist = Playlist.new(params[:playlist])
-
-    respond_to do |format|
-      if @playlist.save
-        format.html { redirect_to @playlist, :notice => 'Playlist was successfully created.' }
-        format.json { render :json => @playlist, :status => :created, :location => @playlist }
-      else
-        format.html { render :action => "new" }
-        format.json { render :json => @playlist.errors, :status => :unprocessable_entity }
-      end
-    end
+    group = Group.find(params[:group_id])
+    start_date = params[:start_date]
+    end_date = params[:end_date]
+    gen = PlaylistGenerator.new
+    @group = group
+    @playlist = gen.generate(group)
+    render 'group_playlist'
   end
 
   # PUT /playlists/1

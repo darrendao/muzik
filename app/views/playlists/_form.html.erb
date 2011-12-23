@@ -1,29 +1,12 @@
-<%= form_for(@playlist) do |f| %>
-  <% if @playlist.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@playlist.errors.count, "error") %> prohibited this playlist from being saved:</h2>
-
-      <ul>
-      <% @playlist.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%= f.label :group_id %><br />
-    <%= f.number_field :group_id %>
-  </div>
-  <div class="field">
-    <%= f.label :date %><br />
-    <%= f.datetime_select :date %>
-  </div>
-  <div class="field">
-    <%= f.label :content %><br />
-    <%= f.text_area :content %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<%= form_tag '/playlists', :method => 'post' do %>
+  <% group_array = Group.order('name').collect {|s| [s.name, s.id]} %>
+  Group: <%= select_tag "group_id", options_for_select(group_array)%>
+  from <%= text_field_tag :start_date, nil, :class => 'datetimefield'  %>
+  to <%= text_field_tag :end_date , nil, :class => 'datetimefield'%>
+  <%= submit_tag "Generate" %>
 <% end %>
+
+
+<script type="text/javascript">
+  $(".datetimefield").AnyTime_picker({ format: "%M %D, %z", firstDOW: 1 } );
+</script>

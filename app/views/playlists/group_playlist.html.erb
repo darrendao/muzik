@@ -1,0 +1,4 @@
+<h3>Playlist for <%= @group.name %></h3>
+<% @playlist.sort.each do |time, song| %>
+  <%= Time.at(time.to_i).utc.strftime("%I:%M:%S %p") %> ==> <%= song.title %><br/>
+<% end %>
