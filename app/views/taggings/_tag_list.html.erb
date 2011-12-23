@@ -1,0 +1,3 @@
+<% taggings.each do |tagging| %>
+  <%= tagging.tag.name %> (<%= link_to 'x', "/taggings/#{tagging.id}", :confirm => 'Are you sure?', :method => :delete, :remote => true %>) |
+<% end %>
