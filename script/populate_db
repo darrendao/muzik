@@ -23,7 +23,7 @@ end
 # Create group
 (1..10).each do |i|
   a = Group.new(:name => "Group #{i}")
-  (1..100).each do |j|
+  (1..1000).each do |j|
     song = songs[rand(5000)]
     gsa = GroupSongAssignment.new
     gsa.song_id = song.id
