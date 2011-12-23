@@ -1,13 +1,13 @@
 <p id="notice"><%= notice %></p>
 
 <div style="text-align:center">
-  <h3><%= @group.name %>
-  </h3>
+  <h2><%= @group.name %></h2>
 </div>
 
 <div id="energy_level_intervals">
   <%= render :partial => 'energy_level_intervals' %>
 </div>
+
 <div id="locations">
   <%= render :partial => 'locations' %>
 </div>
@@ -15,7 +15,7 @@
   <%= render :partial => 'create_location_assignment' %>
 </div>
 <div id="add_location_link">
-  <%= link_to_function 'Add Location', "$('#create_location_assignment').show(); $('#add_location_link').hide()" %>
+  <%= link_to_function jquery_ui_button_icon("Add Location", "ui-icon-plusthick", "addlocation").html_safe , "$('#create_location_assignment').show(); $('#add_location_link').hide()" %>
 </div>
 <br/>
 <div id="songs">
@@ -25,7 +25,11 @@
   <%= render :partial => 'create_song_assignment' %>
 </div>
 <div id="add_song_link">
-  <%= link_to_function 'Add Song', "$('#create_song_assignment').show(); $('#add_song_link').hide()" %>
+  <%= link_to_function jquery_ui_button_icon("Add Song", "ui-icon-plusthick", "addsong").html_safe , "$('#create_song_assignment').show(); $('#add_song_link').hide()" %>
+</div>
+
+<div id="holiday_events">
+  <%= render :partial => 'holiday_events' %>
 </div>
 <br/>
 
