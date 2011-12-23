@@ -16,4 +16,8 @@ class Song < ActiveRecord::Base
     end
     self.checksum = Digest::MD5.file(tmp_path).hexdigest
   end
+
+  def formatted_duration
+    format('%02d:%02d', *duration.divmod(60))
+  end
 end
