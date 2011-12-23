@@ -5,5 +5,5 @@
 </div>
 
 <br />
-<a href="#" id="delete_locations">Delete Selected Location(s)</a> |
-<%= link_to 'New Location', new_location_path %>
+<%= jquery_ui_button_icon("Delete Selected Location(s)", "ui-icon-circle-close", "delete_locations").html_safe %>
+<a href="<%= new_location_path %>"><%= jquery_ui_button_icon("New Location", "ui-icon-plusthick", "newlocation").html_safe %></a>

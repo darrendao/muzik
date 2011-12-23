@@ -1,25 +1,46 @@
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#energy_level_table").dataTable({
+                                 "aoColumn"        : [{"bSortable":false}],
+                                 "bJQueryUI"       : true,
+                                 "fnRowCallback"   : function( nRow, aData, iDisplayIndex ) {
+                                            if ( jQuery.inArray(aData[0], gaiSelected) != -1 ){
+                                                  $(nRow).addClass('row_selected');
+                                            }
+                                     return nRow;
+                                  },
+                                 "aoColumnDefs"    : [{"bVisible":false, "aTargets":[0]}, {"bSortable":false, "aTargets":[1]}],
+                                 "bProcessing"     : false,
+                                 "bServerSide"     : false,
+                                 "aaSorting"       : [[2, 'asc']]
+    });
+  });
+</script>
+
 <h3>Listing energy_levels</h3>
 
-<table>
+<table id="energy_level_table" class="display">
+  <thead>
   <tr>
+    <th>id</th>
+    <th></th>
     <th>Name</th>
     <th>Level</th>
-    <th></th>
-    <th></th>
-    <th></th>
   </tr>
-
+  </thead>
+  <tbody>
 <% @energy_levels.each do |energy_level| %>
   <tr>
+    <td><%= energy_level.id %></td>
+    <td><%= link_to 'Show', energy_level %> | 
+        <%= link_to 'Edit', edit_energy_level_path(energy_level) %> | 
+        <%= link_to 'Destroy', energy_level, :confirm => 'Are you sure?', :method => :delete %></td>
     <td><%= energy_level.name %></td>
     <td><%= energy_level.elevel %></td>
-    <td><%= link_to 'Show', energy_level %></td>
-    <td><%= link_to 'Edit', edit_energy_level_path(energy_level) %></td>
-    <td><%= link_to 'Destroy', energy_level, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
+  </tbody>
 </table>
 
 <br />
-
-<%= link_to 'New Energy level', new_energy_level_path %>
+<a href="<%= new_energy_level_path %>"><%= jquery_ui_button_icon("New Energy Level", "ui-icon-plusthick", "newenergylevel").html_safe %></a>

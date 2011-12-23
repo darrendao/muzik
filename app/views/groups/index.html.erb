@@ -5,5 +5,5 @@
 </div>
 
 <br />
-<a href="#" id="delete_groups">Delete Selected Group(s)</a> |
-<%= link_to 'New Group', new_group_path %>
+<%= jquery_ui_button_icon("Delete Selected Group(s)", "ui-icon-circle-close", "delete_groups").html_safe %>
+<a href="<%= new_group_path %>"><%= jquery_ui_button_icon("New Group", "ui-icon-plusthick", "newgroup").html_safe %></a>

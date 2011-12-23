@@ -35,6 +35,7 @@ Muzik::Application.routes.draw do
     end
   end
 
+  resources :taggings
   resources :tests
 
   # The priority is based upon order of creation:
