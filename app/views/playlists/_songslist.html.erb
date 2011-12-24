@@ -1,0 +1,33 @@
+<script type="text/javascript">
+  var oTable;
+  $(document).ready(function() {
+    oTable = $("#songslisttable<%= date %>").dataTable({
+                                 "bJQueryUI"       : true,
+                                 "bProcessing"     : false,
+                                 "bServerSide"     : false,
+                                 "aoColumnDefs"    : [{"bVisible":false, "aTargets":[0]}, {"bSortable":false, "aTargets":[1,2,3]}],
+                                 "aaSorting"       : [[0, 'asc']]
+                               });
+  });
+</script>
+
+<table class="display" id="songslisttable<%= date %>">
+  <thead>
+  <tr>
+    <th>sectime</th>
+    <th>Time</th>
+    <th>Title</th>
+    <th>File</th>
+  </tr>
+  </thead>
+  <tbody>
+ <% songslist.each do |time, song| %>
+  <tr>
+    <td><%= time %></td>
+    <td><%= sec_to_human_time(time) %></td>
+    <td><%= song['title'] %></td>
+    <td><%= song['file_path'] %></td>
+  </tr>
+<% end %>
+  </tbody>
+</table>

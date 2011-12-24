@@ -79,7 +79,7 @@ ActiveRecord::Schema.define(:version => 20111223025038) do
 
   create_table "playlists", :force => true do |t|
     t.integer  "group_id"
-    t.datetime "date"
+    t.date     "date"
     t.text     "content"
     t.datetime "created_at"
     t.datetime "updated_at"

@@ -7,6 +7,7 @@ class Song < ActiveRecord::Base
   acts_as_taggable
 
   def process_mp3
+    self.file_path = mp3.path
     tmp_path = mp3.queued_for_write[:original].path
     Mp3Info.open(tmp_path) do |mp3_info|
       self.title = mp3_info.tag.title
@@ -19,5 +20,12 @@ class Song < ActiveRecord::Base
 
   def formatted_duration
     format('%02d:%02d', *duration.divmod(60))
+  end
+
+  def entry_for_playlist
+    return {:id => id,
+            :title => title,
+            :file_path => file_path
+           }
   end
 end

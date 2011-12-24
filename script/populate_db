@@ -16,6 +16,7 @@ songs = []
   s.artist = "artist #{rand(3000)}"
   s.belongs_to_album = "album #{rand(1000)}"
   s.duration = 300 + rand(200)
+  s.file_path = s.title.gsub(/ /, '') + ".mp3"
   songs << s
   s.save
 end

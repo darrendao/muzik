@@ -39,13 +39,23 @@ class PlaylistsController < ApplicationController
   # POST /playlists
   # POST /playlists.json
   def create
-    group = Group.find(params[:group_id])
+    @group = Group.find(params[:group_id])
     start_date = params[:start_date]
     end_date = params[:end_date]
+
+    start_date = Date.parse(start_date)
+    end_date = Date.parse(end_date)
+
     gen = PlaylistGenerator.new
-    @group = group
-    @playlist = gen.generate(group)
-    render 'group_playlist'
+
+    @playlists = []
+    (start_date..end_date).each do |date|
+      pl = Playlist.find_or_create_by_date_and_group_id(date, @group.id)
+      songslist = gen.generate(@group, @playlists[-1])
+      pl.content = songslist.to_json
+      pl.save
+      @playlists << pl
+    end
   end
 
   # PUT /playlists/1

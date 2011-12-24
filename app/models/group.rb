@@ -1,6 +1,7 @@
 class Group < ActiveRecord::Base
   has_many :songs, :through => :group_song_assignments
   has_many :group_song_assignments, :dependent => :destroy
+  has_many :playlists
   has_many :locations
   has_many :energy_level_intervals
   has_many :group_holiday_schedules

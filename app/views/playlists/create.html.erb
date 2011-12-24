@@ -1,0 +1,6 @@
+<% @playlists.each do |playlist| %>
+  <b>Playlist for <%= playlist.group.name %> on <%= playlist.date %></b><br/>
+  <div>
+    <%= render :partial => 'songslist', :locals => {:songslist => playlist.content_hash, :date => playlist.date} %>
+  </div>
+<% end %>
