@@ -61,7 +61,6 @@ class SongsController < ApplicationController
 
     respond_to do |format|
       if @song.update_attributes(params[:song])
-        puts "now.... #{@song.energy_level}"
         format.html { redirect_to @song, :notice => 'Song was successfully updated.' }
         format.json { head :ok }
       else
