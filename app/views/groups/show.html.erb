@@ -26,6 +26,10 @@
 </div>
 <div id="add_song_link">
   <%= link_to_function jquery_ui_button_icon("Add Song", "ui-icon-plusthick", "addsong").html_safe , "$('#create_song_assignment').show(); $('#add_song_link').hide()" %>
+  <%= link_to jquery_ui_button_icon("Generate Playlists", "ui-icon-shuffle", "genplaylist").html_safe,
+      new_playlist_path(:playlist => {:group_id => @group.id}) %>
+  <%= link_to jquery_ui_button_icon("View Playlists", "ui-icon-play", "playlist").html_safe,
+      url_for(:action => "playlists", :group_id => @group.id) %>
 </div>
 <br/>
 <div id="holiday_schedules">

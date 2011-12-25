@@ -151,4 +151,9 @@ class GroupsController < ApplicationController
     group_id = params[:group_id]
     num_day = params[:num_day]
   end
+
+  def playlists
+    @group = Group.find(params[:group_id])
+    @playlists = Playlist.where(:group_id => params[:group_id]).order('date desc')
+  end
 end

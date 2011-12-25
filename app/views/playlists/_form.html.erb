@@ -1,11 +1,9 @@
-<%= form_tag '/playlists', :method => 'post' do %>
-  <% group_array = Group.order('name').collect {|s| [s.name, s.id]} %>
-  Group: <%= select_tag "group_id", options_for_select(group_array)%>
+<%= form_for(@playlist) do |f| %>
+  <%= f.select :group_id, Group.order('name').collect{|g| [g.name, g.id]} %>
   from <%= text_field_tag :start_date, nil, :class => 'datetimefield'  %>
   to <%= text_field_tag :end_date , nil, :class => 'datetimefield'%>
   <%= submit_tag "Generate" %>
 <% end %>
-
 
 <script type="text/javascript">
   $(".datetimefield").AnyTime_picker({ format: "%M %D, %z", firstDOW: 1 } );

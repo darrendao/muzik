@@ -25,6 +25,7 @@ class PlaylistsController < ApplicationController
   # GET /playlists/new
   # GET /playlists/new.json
   def new
+    @playlist = Playlist.new(params[:playlist])
     respond_to do |format|
       format.html # new.html.erb
       format.json { render :json => @playlist }
@@ -39,7 +40,8 @@ class PlaylistsController < ApplicationController
   # POST /playlists
   # POST /playlists.json
   def create
-    @group = Group.find(params[:group_id])
+    playlist = Playlist.new(params[:playlist])
+    @group = Group.find(playlist.group_id)
     start_date = params[:start_date]
     end_date = params[:end_date]
 
@@ -84,5 +86,8 @@ class PlaylistsController < ApplicationController
       format.html { redirect_to playlists_url }
       format.json { head :ok }
     end
+  end
+
+  def display
   end
 end

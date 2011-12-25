@@ -1,7 +1,11 @@
 Muzik::Application.routes.draw do
   resources :group_holiday_schedules
 
-  resources :playlists
+  resources :playlists do
+    collection do
+      get 'display'
+    end
+  end
 
   resources :energy_levels
 
@@ -25,7 +29,7 @@ Muzik::Application.routes.draw do
       post 'add_location'
       post 'add_holiday_schedule'
       get 'delete'
-      get 'gen_playlist'
+      get 'playlists'
     end
   end
 

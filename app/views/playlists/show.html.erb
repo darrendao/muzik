@@ -10,11 +10,6 @@
   <%= @playlist.date %>
 </p>
 
-<p>
-  <b>Content:</b>
-  <%= @playlist.content %>
-</p>
-
-
-<%= link_to 'Edit', edit_playlist_path(@playlist) %> |
-<%= link_to 'Back', playlists_path %>
+<div>
+  <%= render :partial => 'songslist', :locals => {:songslist => @playlist.content_hash, :date => @playlist.date} %>
+</div>
