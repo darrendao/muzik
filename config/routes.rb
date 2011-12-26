@@ -5,6 +5,7 @@ Muzik::Application.routes.draw do
   resources :playlists do
     collection do
       get 'display'
+      get 'fetch'
     end
   end
 

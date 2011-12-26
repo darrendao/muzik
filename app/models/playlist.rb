@@ -1,7 +1,7 @@
 class Playlist < ActiveRecord::Base
   belongs_to :group
   validates :date, :uniqueness => {:scope => :group_id}
-  def content_hash
+  def songs_list
     if content
       JSON.parse(content)
     else
@@ -11,9 +11,8 @@ class Playlist < ActiveRecord::Base
   def songs_in_interval(start_time, end_time)
     songs = []
     if content
-      songslist = content_hash
-      songslist.each do |time, song|
-        songs << song if start_time <= time.to_f && time.to_f <= end_time
+      songs_list.each do |song|
+        songs << song if start_time <= song['timestamp'] && song['timestamp'] <= end_time
       end
     end
     songs

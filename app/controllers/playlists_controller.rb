@@ -53,6 +53,7 @@ class PlaylistsController < ApplicationController
     @playlists = []
     (start_date..end_date).each do |date|
       pl = Playlist.find_or_create_by_date_and_group_id(date, @group.id)
+      logger.info "GOING TO GENERATE"
       songslist = gen.generate(@group, @playlists[-1])
       pl.content = songslist.to_json
       pl.save
@@ -88,6 +89,20 @@ class PlaylistsController < ApplicationController
     end
   end
 
-  def display
+  def fetch
+    group_id = params[:group_id] || 1
+    result = {}
+    plists = Playlist.where(:group_id => group_id)
+    plists.each do |pl|
+      result[pl.date] = JSON.parse(pl.content)
+    end
+    respond_to do |format|
+      format.html {
+        render :text => result.inspect
+      }
+      format.json {
+        render :json => result
+      }
+    end
   end
 end

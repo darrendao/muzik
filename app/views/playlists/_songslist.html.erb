@@ -21,10 +21,10 @@
   </tr>
   </thead>
   <tbody>
- <% songslist.each do |time, song| %>
+ <% songslist.each do |song| %>
   <tr>
-    <td><%= time %></td>
-    <td><%= sec_to_human_time(time) %></td>
+    <td><%= song['timestamp'] %></td>
+    <td><%= sec_to_human_time(song['timestamp']) %></td>
     <td><%= song['title'] %></td>
     <td><%= song['file_path'] %></td>
   </tr>

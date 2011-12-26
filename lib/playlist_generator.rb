@@ -3,7 +3,7 @@ class PlaylistGenerator
     @options = options
   end
   def generate(group, previous_playlist = nil, start_time = 0, end_time = 86400)
-    playlist = {}
+    playlist = []
     songs = group.songs.clone
     songs_counter = songs.size
     current_time = start_time              # seconds since midnight
@@ -44,7 +44,10 @@ class PlaylistGenerator
       end
 
       # All conditions meet. Add song to playlist
-      playlist[current_time] = candidate.entry_for_playlist
+      puts "FOUND A SOLUTION FOR TImE #{current_time}"
+      playlist_entry = candidate.entry_for_playlist
+      playlist_entry[:timestamp] = current_time.to_i
+      playlist << playlist_entry
       current_time += candidate.duration
 
       # See if at the end of this song, we're in a new hour. If so, then re-initialize things
