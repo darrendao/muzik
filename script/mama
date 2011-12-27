@@ -2,23 +2,60 @@
 require 'rubygems'
 require 'mp3info'
 
-file = File.new("lib.xml", "r")
-duration = artist = id = album = title = nil
-while (line = file.gets)
+$duration = $artist = $song_id = $album = $title = nil
+$in_song_section = true
+$in_playlist_section = false
+
+def process_song_info(line)
   if line =~ /Artist<\/key><string>(.+)</
-    artist = $1
+    $artist = $1
   elsif line =~ /Name<\/key><string>(.+)</
-    title =$1
+    $title =$1
   elsif line =~ /Total Time<\/key><integer>(.+)</
-    duration = $1.to_i/1000.0
+    $duration = $1.to_i/1000.0
   elsif line =~ /Album<\/key><string>(.+)</
-    album =$1
+    $album =$1
   elsif line =~ /Persistent ID<\/key><string>(.+)</
-    id = $1
+    $song_id = $1
   elsif line =~ /Library Folder Count/
-    a = Song.new(:title => title, :artist => artist, :duration => duration, :album => album, :checksum => id)
-    a.save
-    puts "#{title}  by #{artist} -- #{duration} sec in #{album}"
+    #a = Song.new(:title => $title, :artist => $artist, :duration => $duration, :album => $album, :checksum => $song_id)
+    # a.save
+    puts({:title => $title, :artist => $artist, :duration => $duration, :album => $album, :checksum => $song_id}.inspect)
+  end
+end
+
+$playlist_name = nil
+$energy_level = nil
+$song_lists = []
+def process_playlist_info(line)
+  if line =~ /Name<\/key><string>(.+)</
+    puts $1
+    if $playlist_name
+#       puts $playlist_name + " has the following songs " + $song_lists.inspect
+    end
+    $song_lists = []
+    if line =~ /BG\.(.+)\d*\.(E\d)/
+      $playlist_name = $1
+      $energy_level = $2
+    else
+      return
+    end
+  elsif line =~ /Track ID<\/key><integer>(\d+)</
+    $song_lists << $1
+  end
+end
+
+file = File.new("111214_AlexLibrary.xml", "r")
+while (line = file.gets)
+  if line =~ /Playlists<\/key>/
+    $in_song_section = false
+    $in_playlist_section = true
+  end
+
+  if $in_song_section
+#    process_song_info(line)
+  elsif $in_playlist_section
+    process_playlist_info(line)
   end
 end
 file.close

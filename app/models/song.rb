@@ -25,7 +25,8 @@ class Song < ActiveRecord::Base
   def entry_for_playlist
     return {:id => id,
             :title => title,
-            :file_path => file_path
+            :file_path => file_path,
+            :duration => duration
            }
   end
 end
