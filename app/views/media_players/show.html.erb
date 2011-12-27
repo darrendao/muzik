@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Location:</b>
+  <%= link_to @media_player.location_id, @media_player.location if @media_player.location %>
+</p>
+
+<p>
+  <b>Ip address:</b>
+  <%= @media_player.ip_address %>
+</p>
+
+<p>
+  <b>Hostname:</b>
+  <%= @media_player.hostname %>
+</p>
+
+<p>
+  <b>Serial:</b>
+  <%= @media_player.serial %>
+</p>
+
+
+<%= link_to 'Edit', edit_media_player_path(@media_player) %> |
+<%= link_to 'Back', media_players_path %>

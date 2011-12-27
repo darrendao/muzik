@@ -1,0 +1,38 @@
+<%= form_for(@media_player) do |f| %>
+  <% if @media_player.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@media_player.errors.count, "error") %> prohibited this media_player from being saved:</h2>
+
+      <ul>
+      <% @media_player.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <% location_array = Location.order('address').collect {|s| [s.address, s.id]} %>
+    <%= f.label :location_id %><br />
+    <%= f.select :location_id, options_for_select(location_array, @media_player.location_id), { :include_blank => true} %>
+  </div>
+
+  <div class="field">
+    <%= f.label :ip_address %><br />
+    <%= f.text_field :ip_address %>
+  </div>
+
+  <div class="field">
+    <%= f.label :hostname %><br />
+    <%= f.text_field :hostname %>
+  </div>
+
+  <div class="field">
+    <%= f.label :serial %><br />
+    <%= f.text_field :serial %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

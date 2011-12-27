@@ -1,0 +1,9 @@
+<h3>Listing Media Players</h3>
+
+<div id="media_players">
+  <%= render :partial => 'mediaplayertable' %>
+</div>
+
+<br/>
+<%= jquery_ui_button_icon("Delete Selected Player(s)", "ui-icon-circle-close", "delete_media_players").html_safe %>
+<a href="<%= new_media_player_path %>"><%= jquery_ui_button_icon("New Player", "ui-icon-plusthick", "newplayer").html_safe %></a>
