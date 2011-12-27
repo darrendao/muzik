@@ -26,7 +26,7 @@ class Song < ActiveRecord::Base
     return {:id => id,
             :title => title,
             :file_path => file_path,
-            :duration => duration
+            :duration => duration.to_i
            }
   end
 end
