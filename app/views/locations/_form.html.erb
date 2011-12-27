@@ -24,16 +24,36 @@
     <%= f.text_field :contact_name %>
   </div>
   <div class="field">
-    Business Hours<br/>
+    Business Hours<br />
     <%= f.fields_for :business_hours do |ff| %>
       <%= ff.select :wday, BusinessHour.day_options %>
       open from <%= ff.text_field :open_at, :class => 'timefield' %> to <%= ff.text_field :close_at, :class => 'timefield' %><br/>
     <% end %>
   </div>
+
+  <div>
+    <strong>Media Player:</strong><br/>
+    <%= f.fields_for :media_player do |ff| %>
+      <div class="field">
+        <%= ff.label :hostname %>
+        <%= ff.text_field :hostname %>
+      </div>
+      <div class="field">
+        <%= ff.label :serial %>
+        <%= ff.text_field :serial %>
+      </div>
+      <div class="field">
+        <%= ff.label :ip_address %>
+        <%= ff.text_field :ip_address %>
+      </div>
+    <% end %>
+  </div>
+
   <div class="field">
     <%= f.label :group %><br />
     <%= f.select :group_id, Group.order('name').collect{|g| [g.name, g.id]}, { :include_blank => true} %>
   </div>
+
   <div class="actions">
     <%= f.submit %>
   </div>

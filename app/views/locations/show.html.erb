@@ -28,9 +28,10 @@
   <% end %>
 </p>
 
-<p>
-  <b>Now playing:</b> To be implemented<br/>
-</p>
+<h3>Media Player Info</h3>
+<div id="media_player" class="infobox">
+  <%= render 'media_player' %>
+</div>
 
 <%= link_to 'Edit', edit_location_path(@location) %> |
 <%= link_to 'Back', locations_path %>

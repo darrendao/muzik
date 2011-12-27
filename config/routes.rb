@@ -1,4 +1,11 @@
 Muzik::Application.routes.draw do
+  resources :media_players do
+    collection do
+      get 'datatable'
+      get 'delete'
+    end
+  end
+
   resources :dashboard
   resources :group_holiday_schedules
 

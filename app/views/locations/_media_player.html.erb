@@ -1,0 +1,9 @@
+<% if @location.media_player.nil? %>
+  No information
+<% else %>
+  <strong>Hostname</strong>: <%= @location.media_player.hostname %><br />
+  <strong>IP Address</strong>: <%= @location.media_player.ip_address %><br />
+  <strong>Serial</strong>: <%= @location.media_player.serial %><br />
+    <strong>Last Checkin</strong><br />
+<% end %>
+

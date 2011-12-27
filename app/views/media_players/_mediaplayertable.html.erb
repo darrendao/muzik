@@ -1,0 +1,66 @@
+<script type="text/javascript">
+  var gaiSelected =  [];
+  var oTable;
+  $(document).ready(function() {
+    oTable = $("#mediaplayertable").dataTable({
+               "bProcessing"     : true,
+               "bServerSide"     : true,
+               "bJQueryUI"       : true,
+               "sPaginationType" : "full_numbers",
+               "aoColumnDefs"    : [{"bVisible":false, "aTargets":[0]}, {"bSortable":false, "aTargets":[1]}],
+               "aaSorting"       : [[2, 'asc']],
+               "fnRowCallback"   : function( nRow, aData, iDisplayIndex ) {
+       			  if ( jQuery.inArray(aData[0], gaiSelected) != -1 )
+       			  {
+	       			$(nRow).addClass('row_selected');
+		       	  }
+                  return nRow;
+               },
+               "sAjaxSource"     : "/media_players/datatable.json" });
+
+    /* Click event handler */
+    $('#mediaplayertable tbody tr').live('click', function () {
+      var aData = oTable.fnGetData( this );
+      var iId = aData[0];
+
+      if ( jQuery.inArray(iId, gaiSelected) == -1 )
+      {
+        gaiSelected[gaiSelected.length++] = iId;
+      }
+      else
+      {
+        gaiSelected = jQuery.grep(gaiSelected, function(value) {
+          return value != iId;
+          } );
+		}
+      $(this).toggleClass('row_selected');
+	} );
+
+    $('#delete_media_players').click( function() {
+      $.ajax({
+              type: "GET",
+              url: "/media_players/delete",
+              data: "media_player_ids="+gaiSelected,
+              success: function(data){
+                  gaiSelected =  [];
+                  oTable.fnDraw();
+              }
+            });
+      return false;
+	} );
+  });
+</script>
+<table class="display" id="mediaplayertable">
+  <thead>
+  <tr>
+    <th>id</th>
+    <th></th>
+    <th>Location</th>
+    <th>Hostname</th>
+    <th>Ip address</th>
+    <th>Serial</th>
+  </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>

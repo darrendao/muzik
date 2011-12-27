@@ -28,6 +28,7 @@ class LocationsController < ApplicationController
     (1..7).each do |i|
       @location.business_hours.build
     end
+    @location.media_player ||= MediaPlayer.new
 
     respond_to do |format|
       format.html # new.html.erb
@@ -41,6 +42,7 @@ class LocationsController < ApplicationController
     (@location.business_hours.size..7).each do |i|
       @location.business_hours.build
     end
+    @location.media_player ||= MediaPlayer.new
   end
 
   # POST /locations
@@ -107,7 +109,7 @@ class LocationsController < ApplicationController
     end
     respond_to do |format|
       format.js do
-        render 'update_locationtable'
+        render :nothing
       end
     end
   end
