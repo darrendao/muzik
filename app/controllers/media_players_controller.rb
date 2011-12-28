@@ -105,4 +105,38 @@ class MediaPlayersController < ApplicationController
       end
     end
   end
+
+  def location_info
+    result = {}
+    hostname = params[:hostname]
+    player = nil
+    location = nil
+
+    if hostname
+      player = MediaPlayer.where(:hostname => hostname).first
+    end
+
+    if player
+      location = player.location
+      if location
+        business_hours = location.business_hours
+        result[:business_hours] = business_hours
+      end
+      if location.group
+        result[:group] = location.group
+        energy_level_intervals = location.group.energy_level_intervals
+        result[:energy_level_intervals] = energy_level_intervals
+      end
+    end
+
+
+    respond_to do |format|
+      format.json do
+        render :json => result.to_json
+      end
+      format.html do
+        render :text => result.inspect
+      end
+    end
+  end
 end

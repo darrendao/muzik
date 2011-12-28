@@ -1,0 +1,3 @@
+@groups.each do |group|
+  json << [group.name, group.id]
+end

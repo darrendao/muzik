@@ -162,4 +162,12 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:group_id])
     render :partial => 'songs', :layout => false
   end
+
+  respond_to :html, :datatables
+  def search
+    per_page = params['iDisplayLength'].to_i
+    page = params['iDisplayStart'].to_i / per_page + 1
+    @groups = Group.search(params[:search]).paginate(:page => page, :per_page=>per_page)
+    respond_with @groups
+  end
 end
