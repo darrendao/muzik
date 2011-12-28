@@ -3,6 +3,7 @@ Muzik::Application.routes.draw do
     collection do
       get 'datatable'
       get 'delete'
+      get 'location_info'
     end
   end
 
@@ -40,6 +41,7 @@ Muzik::Application.routes.draw do
       get 'delete'
       get 'playlists'
       get 'songstable'
+      get 'search'
     end
   end
 
