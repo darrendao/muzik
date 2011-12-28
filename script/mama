@@ -29,14 +29,15 @@ $energy_level = nil
 $song_lists = []
 def process_playlist_info(line)
   if line =~ /Name<\/key><string>(.+)</
-    puts $1
     if $playlist_name
 #       puts $playlist_name + " has the following songs " + $song_lists.inspect
     end
     $song_lists = []
-    if line =~ /BG\.(.+)\d*\.(E\d)/
+    #if line =~ /BG\.(.+)\d*\.(E\d)/
+    if line =~ /BG\.(.+)\.Consolidated\.\d+\.(E\d)/
       $playlist_name = $1
       $energy_level = $2
+      puts $playlist_name + " " + $energy_level
     else
       return
     end
