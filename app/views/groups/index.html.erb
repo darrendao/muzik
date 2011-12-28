@@ -1,35 +1,9 @@
 <h3>Listing groups</h3>
 
 <div id="groups">
+  <%= render :partial => 'grouptable' %>
 </div>
 
 <br />
 <%= jquery_ui_button_icon("Delete Selected Group(s)", "ui-icon-circle-close", "delete_groups").html_safe %>
 <a href="<%= new_group_path %>"><%= jquery_ui_button_icon("New Group", "ui-icon-plusthick", "newgroup").html_safe %></a>
-
-<script type="text/javascript">
-$(document).ready(function() {
-  $("#groups2").dataTable({
-    "bJQueryUI"       : true,
-    "sAjaxSource"     : "/groups/search.datatables",
-    "aaSorting"       : [[0, 'asc']],
-    "aoColumns"       : [
-      {"sName":"name"},
-      {"sName":"id"}
-    ],
-    "bServerSide"     : true
-  });
-});
-</script>
-
-<table class="display" id="groups2">
-  <thead>
-  <tr>
-    <th>name</th>
-    <th>id</th>
-  </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
-
