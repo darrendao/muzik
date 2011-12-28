@@ -156,4 +156,10 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:group_id])
     @playlists = Playlist.where(:group_id => params[:group_id]).order('date desc')
   end
+
+  def songstable
+    logger.info "FUCK YEA"
+    @group = Group.find(params[:group_id])
+    render :partial => 'songs', :layout => false
+  end
 end

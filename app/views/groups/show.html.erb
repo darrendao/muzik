@@ -18,8 +18,11 @@
   <%= link_to_function jquery_ui_button_icon("Add Location", "ui-icon-plusthick", "addlocation").html_safe , "$('#create_location_assignment').show(); $('#add_location_link').hide()" %>
 </div>
 <br/>
+
+<h3>Song Library</h3>
 <div id="songs">
-  <%= render :partial => 'songs' %>
+  Loading...
+  <br/>
 </div>
 <div id="create_song_assignment" style="display:none">
   <%= render :partial => 'create_song_assignment' %>
@@ -45,3 +48,16 @@
 
 <%= link_to 'Edit', edit_group_path(@group) %> |
 <%= link_to 'Back', groups_path %>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $.ajax({
+        url: "/groups/songstable?group_id=<%= @group.id %>",
+        success: function(html){
+          $("#songs").html(html);
+        }
+    });
+  });
+
+
+</script>
