@@ -1,5 +1,5 @@
 class SongsController < ApplicationController
-  autocomplete :song, :title
+  autocomplete :song, :title, :full => false
   # GET /songs
   # GET /songs.json
   def index
