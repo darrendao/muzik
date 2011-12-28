@@ -39,6 +39,7 @@ Muzik::Application.routes.draw do
       post 'add_holiday_schedule'
       get 'delete'
       get 'playlists'
+      get 'songstable'
     end
   end
 
