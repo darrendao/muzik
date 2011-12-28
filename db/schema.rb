@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111227190504) do
+ActiveRecord::Schema.define(:version => 20111228234059) do
 
   create_table "black_lists", :force => true do |t|
     t.integer  "location_id"
@@ -75,6 +75,7 @@ ActiveRecord::Schema.define(:version => 20111227190504) do
     t.integer  "group_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name"
   end
 
   create_table "media_players", :force => true do |t|

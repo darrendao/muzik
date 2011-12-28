@@ -90,10 +90,10 @@ class LocationsController < ApplicationController
   def datatable
     respond_to do |format|
       format.json do
-        render(:json => Location.for_data_table(self, %w(id nil address phone_number contact_name), %w(address phone_number contact_name)) do |location|
+        render(:json => Location.for_data_table(self, %w(id nil name address phone_number contact_name), %w(name address phone_number contact_name)) do |location|
           action_links = "<a href='/locations/#{location.id}'>View</a>" + " " +
                          "<a href='/locations/#{location.id}/edit'>Edit</a>"
-          [location.id, action_links, location.address, location.phone_number, location.contact_name]
+          [location.id, action_links, location.name, location.address, location.phone_number, location.contact_name]
         end)
       end
     end
