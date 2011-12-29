@@ -13,7 +13,9 @@ gem 'data_table'
 gem 'will_paginate'
 gem 'rails3-jquery-autocomplete'
 gem 'acts-as-taggable-on', '~>2.2.0'
-
+gem 'jsonify'
+gem 'jsonify-rails'
+gem 'simple_datatables'
 # Gems used only for assets and not required
 # in production environments by default.
 #group :assets do
