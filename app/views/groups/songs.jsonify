@@ -1,0 +1,8 @@
+@group_song_assignments.each do |gsa|
+  links = []
+  links << link_to('Remove',
+                   {:action => 'remove_group_song_assignment',
+                    :group_song_assignment_id => gsa.id},
+                   :method => 'get', :remote => true, :confirm => "Are you sure?")
+  json << [links.join(" | "), gsa.song.title, gsa.song.artist, gsa.song.belongs_to_album, gsa.energy_level.name]
+end
