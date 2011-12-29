@@ -41,7 +41,8 @@ Muzik::Application.routes.draw do
       get 'delete'
       get 'playlists'
       get 'songstable'
-      get 'search'
+      get 'songs'
+      get 'remove_group_song_assignment'
     end
   end
 

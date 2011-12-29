@@ -21,8 +21,7 @@
 
 <h3>Song Library</h3>
 <div id="songs">
-  Loading...
-  <br/>
+  <%= render :partial => 'songs' %>
 </div>
 <div id="create_song_assignment" style="display:none">
   <%= render :partial => 'create_song_assignment' %>
@@ -49,15 +48,3 @@
 <%= link_to 'Edit', edit_group_path(@group) %> |
 <%= link_to 'Back', groups_path %>
 
-<script type="text/javascript">
-  $(document).ready(function() {
-    $.ajax({
-        url: "/groups/songstable?group_id=<%= @group.id %>",
-        success: function(html){
-          $("#songs").html(html);
-        }
-    });
-  });
-
-
-</script>

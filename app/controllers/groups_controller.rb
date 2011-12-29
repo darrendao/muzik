@@ -136,6 +136,16 @@ class GroupsController < ApplicationController
     end
   end
 
+  def remove_group_song_assignment
+    @group_song_assignment = GroupSongAssignment.find(params[:group_song_assignment_id])
+    @group = @group_song_assignment.group
+    @group_song_assignment.destroy
+    respond_to do |format|
+      format.html
+      format.js { render 'update_songtable'}
+    end
+  end
+
   # Method to handle ajax calls for deleting multiple groups
   def delete
     group_ids = params[:group_ids]
@@ -157,17 +167,14 @@ class GroupsController < ApplicationController
     @playlists = Playlist.where(:group_id => params[:group_id]).order('date desc')
   end
 
-  def songstable
-    logger.info "FUCK YEA"
-    @group = Group.find(params[:group_id])
-    render :partial => 'songs', :layout => false
-  end
-
   respond_to :html, :datatables
-  def search
+  def songs
     per_page = params['iDisplayLength'].to_i
     page = params['iDisplayStart'].to_i / per_page + 1
-    @groups = Group.search(params[:search]).paginate(:page => page, :per_page=>per_page)
-    respond_with @groups
+    search = params['sSearch']
+    search = "%#{search}%"
+    group_id = params[:group_id]
+    @group_song_assignments = GroupSongAssignment.includes(:song, :energy_level).where('group_id = ? AND (songs.title LIKE ? OR songs.artist LIKE ? OR songs.belongs_to_album LIKE ?)', group_id, search, search, search).order('songs.title').paginate(:page => page, :per_page=>per_page)
+    respond_with @group_song_assignments
   end
 end
