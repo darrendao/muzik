@@ -6,4 +6,11 @@ class MediaPlayer < ActiveRecord::Base
   def empty_location_id?
     return location_id.nil?
   end
+  def portal_url
+    if ip_address && !ip_address.empty?
+      return "http://#{ip_address}/status"
+    else
+      return nil
+    end
+  end
 end
