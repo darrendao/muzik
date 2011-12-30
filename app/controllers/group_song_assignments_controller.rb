@@ -45,7 +45,6 @@ class GroupSongAssignmentsController < ApplicationController
     respond_to do |format|
       if @group_song_assignment.save
         format.html {
-          puts "Wth IAM I DIOGN IN HERE"
           if request.env["HTTP_REFERER"].include? "groups"
             redirect_to @group_song_assignment.group
           else

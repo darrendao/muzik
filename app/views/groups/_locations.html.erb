@@ -23,8 +23,11 @@
   <tbody>
  <% @group.locations.each do |location| %>
   <tr>
-    <td><%= link_to 'Remove', {:action => 'remove_location', :group_id => @group.id, :location_id => location.id},
-                    :method => 'get', :remote => true, :confirm => "Are you sure?" %></td>
+    <td>
+      <%= link_to 'Remove', {:action => 'remove_location', :group_id => @group.id, :location_id => location.id},
+                    :method => 'get', :remote => true, :confirm => "Are you sure?" %> |
+      <%= link_to 'View', location %>
+    </td>
     <td><%= location.address %></td>
     <td><%= location.phone_number %></td>
   </tr>

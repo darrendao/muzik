@@ -4,5 +4,6 @@
                    {:action => 'remove_group_song_assignment',
                     :group_song_assignment_id => gsa.id},
                    :method => 'get', :remote => true, :confirm => "Are you sure?")
+  links << link_to('View', gsa.song)
   json << [links.join(" | "), gsa.song.title, gsa.song.artist, gsa.song.belongs_to_album, gsa.energy_level.name]
 end

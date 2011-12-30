@@ -26,7 +26,11 @@ Muzik::Application.routes.draw do
     end
   end
 
-  resources :black_lists
+  resources :black_lists do
+    collection do
+      get 'fetch'
+    end
+  end
 
   resources :group_song_assignments
 

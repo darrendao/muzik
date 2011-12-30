@@ -16,12 +16,14 @@ class PlaylistGenerator
       songs_counter = songs_counter - 1
       if songs_counter < 0
         #logger.warn "CRAP... NO MORE SONG. CAN'T CREATE PLAYLIST."
-        break
+        puts "WTFFFFFFFFFFFFFF"
+        return nil
       end
 
       # Don't play songs of the same artist or album that have been played during the last hour
       if current_hour_songs.any?{|song| song.artist == candidate.artist or song.belongs_to_album == candidate.belongs_to_album}
         #logger.debug "Skipping #{candidate.title} because of artist or album conflict"
+        puts "Skipping #{candidate.title} because of artist or album conflict"
         songs.push(candidate)
         next
       end
@@ -31,6 +33,7 @@ class PlaylistGenerator
       song_energy_level = group.energy_level_of(candidate.id)
       if current_time_energy_level && current_time_energy_level != song_energy_level
         #logger.debug "Skipping #{candidate.title} because of energy level conflict. Song energy level is #{song_energy_level.name}"
+        puts "Skipping #{candidate.title} because of energy level conflict. Song energy level is #{song_energy_level.name}"
         songs.push(candidate)
         next
       end
@@ -49,6 +52,7 @@ class PlaylistGenerator
       playlist_entry[:timestamp] = current_time.to_i
       playlist << playlist_entry
       current_time += candidate.duration
+      songs_counter = songs.size
 
       # See if at the end of this song, we're in a new hour. If so, then re-initialize things
       new_hour = current_time / (60*60)

@@ -32,11 +32,25 @@
       to <%= business_hour.close_at.strftime("%H:%M") %><br/>
   <% end %>
 </p>
-
+<br />
 <h3>Media Player Info</h3>
 <div id="media_player" class="infobox">
   <%= render 'media_player' %>
 </div>
 
+<br />
+<h3>Blacklisted Songs</h3>
+<div id="black_list">
+  <%= render 'black_list' %>
+</div>
+
+<div id="add_black_list" style="display:none">
+  <%= render :partial => 'add_black_list' %>
+</div>
+<div id="add_black_list_link">
+  <%= link_to_function jquery_ui_button_icon("Add Blacklisted Song", "ui-icon-plusthick", "addbls").html_safe , "$('#add_black_list').show(); $('#add_black_list_link').hide()" %>
+</div>
+
+<br />
 <%= link_to 'Edit', edit_location_path(@location) %> |
 <%= link_to 'Back', locations_path %>

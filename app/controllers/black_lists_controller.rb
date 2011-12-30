@@ -45,6 +45,12 @@ class BlackListsController < ApplicationController
     respond_to do |format|
       if @black_list.save
         format.html { redirect_to @black_list, :notice => 'Black list was successfully created.' }
+        format.js {
+          if request.env["HTTP_REFERER"].include? "locations"
+            @location = @black_list.location
+            render "/locations/update_blacklisttable"
+          end
+        }
         format.json { render :json => @black_list, :status => :created, :location => @black_list }
       else
         format.html { render :action => "new" }
@@ -77,6 +83,12 @@ class BlackListsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to black_lists_url }
+      format.js {
+        if request.env["HTTP_REFERER"].include? "locations"
+          @location = @black_list.location
+          render "/locations/update_blacklisttable"
+        end
+      }
       format.json { head :ok }
     end
   end

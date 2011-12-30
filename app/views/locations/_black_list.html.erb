@@ -1,0 +1,37 @@
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#blacklisttable").dataTable({
+                                       "bJQueryUI"       : true,
+                                       "aoColumn"        : [{"bSortable":false}],
+                                       "sPaginationType": "full_numbers",
+                                       "aaSorting"       : [[1, 'asc']]
+                                      });
+    });
+</script>
+<% if @location.black_lists.nil? %>
+  No blacklisted song<br/>
+<% else %>
+<table class="display" id="blacklisttable">
+  <thead>
+  <tr>
+    <th></th>
+    <th>Title</th>
+    <th>Artist</th>
+    <th>Album</th>
+  </tr>
+  </thead>
+  <tbody>
+ <% @location.black_lists.each do |black_list| %>
+  <tr>
+    <td>
+      <%= link_to 'Remove', black_list, :method => 'delete', :remote => true, :confirm => "Are you sure?" %> |
+      <%= link_to 'View', black_list.song %>
+    </td>
+    <td><%= black_list.song.title %></td>
+    <td><%= black_list.song.artist %></td>
+    <td><%= black_list.song.belongs_to_album %></td>
+  </tr>
+<% end %>
+  </tbody>
+</table>
+<% end %>

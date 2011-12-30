@@ -1,0 +1,10 @@
+<%= form_for :black_list, :url => {:controller => 'black_lists', :action => 'create'}, :remote => true do |f| %>
+  <div>
+    Song:
+    <%= autocomplete_field_tag 'song', '', '/songs/autocomplete_song_title', :size => 75, :id_element => '#song_id' %>
+  </div>
+  <%= f.hidden_field( :song_id, { :id => "song_id" } ) %>
+  <%= f.hidden_field( :location_id, { :value => @location.id } ) %>
+  <%= submit_tag "Assign" %>
+  | <%= link_to_function 'Cancel', "$('#add_black_list').hide(); $('#add_black_list_link').show()" %>
+<% end %>
