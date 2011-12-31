@@ -22,7 +22,7 @@
 
 <p>
   <b>Belongs to group:</b>
-  <%= @location.group.name if @location.group %>
+  <%= link_to @location.group.name, @location.group if @location.group %>
 </p>
 
 <p>
@@ -38,7 +38,6 @@
   <%= render 'media_player' %>
 </div>
 
-<br />
 <h3>Blacklisted Songs</h3>
 <div id="black_list">
   <%= render 'black_list' %>
