@@ -4,6 +4,9 @@ Muzik::Application.routes.draw do
       get 'datatable'
       get 'delete'
       get 'location_info'
+      get 'songs_library'
+      get 'blacklisted_songs'
+      get 'playlists'
     end
   end
 

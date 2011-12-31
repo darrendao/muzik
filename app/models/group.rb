@@ -33,8 +33,16 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def songs_with_energy_level
-    ret = {}
-    ret['song']
+  # Return array of songs together with their energy levels for this group
+  def songs_library
+    result = []
+    gsas = GroupSongAssignment.where(:group_id => id).includes(:song, :energy_level)
+    gsas.each do |gsa|
+      song = gsa.song.entry_for_playlist
+      song[:energy_level] = gsa.energy_level.name
+      song[:energy_level_value] = gsa.energy_level.elevel
+      result << song
+    end
+    result
   end
 end
