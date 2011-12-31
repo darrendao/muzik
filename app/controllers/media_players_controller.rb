@@ -116,11 +116,11 @@ class MediaPlayersController < ApplicationController
       if location
         business_hours = location.business_hours
         result[:business_hours] = business_hours
-      end
-      if location.group
-        result[:group] = location.group
-        energy_level_intervals = location.group.energy_level_intervals
-        result[:energy_level_intervals] = energy_level_intervals
+        if location.group
+          result[:group] = location.group
+          energy_level_intervals = location.group.energy_level_intervals
+          result[:energy_level_intervals] = energy_level_intervals
+        end
       end
     end
 
@@ -170,11 +170,6 @@ class MediaPlayersController < ApplicationController
     begin
       plists = media_player.location.group.playlists
       plists.each do |pl|
-        logger.info pl.date
-        logger.info pl.content
-        logger.info "WTF"
-        logger.info JSON.parse(pl.content)
-        logger.info "WWWWWWWWWWWWw"
         result[pl.date] = JSON.parse(pl.content)
       end
     rescue => e

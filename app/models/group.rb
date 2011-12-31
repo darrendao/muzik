@@ -41,6 +41,7 @@ class Group < ActiveRecord::Base
       song = gsa.song.entry_for_playlist
       song[:energy_level] = gsa.energy_level.name
       song[:energy_level_value] = gsa.energy_level.elevel
+      song[:energy_level_id] = gsa.energy_level.id
       result << song
     end
     result

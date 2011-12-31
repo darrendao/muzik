@@ -1,35 +1,143 @@
 #!/usr/bin/env ruby
 
+require 'rubygems'
 require 'optparse'
+require 'rest-client'
+require 'json'
+require 'time'
 
-def ClientSidePlaylistGenerator
-  def generate(songs_list, previous_playlist, start_time=0, end_time = 86400)
+class PlaylistGenerator
+  def initialize(options)
+    @energy_level_intervals = options[:energy_level_intervals]
 
+    # Update intervals to be in seconds to make it easier to calculate later on
+    @energy_level_intervals.each do |eli|
+      start_at =  Time.parse(eli['start_at'])
+      end_at =  Time.parse(eli['end_at'])
+      start_at = start_at.hour * 60 * 60 + start_at.min * 60 + start_at.sec
+      end_at = end_at.hour * 60 * 60 + end_at.min * 60 + end_at.sec
+      eli['start_at'] = start_at
+      eli['end_at'] = end_at
+    end
+  end
+
+  def energy_level_at(time)
+    energy_level = nil
+    @energy_level_intervals.each do |eli|
+      if eli['start_at'] <= time and time <= eli['end_at']
+        energy_level = eli['energy_level_id']
+        break
+      end
+    end
+    energy_level
+  end
+
+  def generate(songs, previous_playlist, start_time=0, end_time = 86400)
+    playlist = []
+    songs_counter = songs.size
+    current_time = start_time              # seconds since midnight
+    current_hour = start_time / (60*60)    # hours since midnight
+    current_hour_songs = [] # list of songs that had been play for this hour
+    current_time_energy_level = energy_level_at(current_time)
+
+    while candidate = songs.shift
+      puts "Current energy level is #{current_time_energy_level.inspect}"
+      songs_counter = songs_counter - 1
+      if songs_counter < 0
+        puts "WTFFFFFFFFFFFFFF"
+        return nil
+      end
+
+      # Don't play songs of the same artist or album that have been played during the last hour
+      if current_hour_songs.any?{|song| song['artist'] == candidate['artist'] or song['album'] == candidate['album']}
+        #logger.debug "Skipping #{candidate.title} because of artist or album conflict"
+        puts "Skipping #{candidate.inspect} because of artist or album conflict"
+        songs.push(candidate)
+        next
+      end
+
+      # Don't play songs that don't match the energy level
+      # If no energy level specified for current time, then we don't care
+      song_energy_level = candidate['energy_level_id']
+      if current_time_energy_level && current_time_energy_level != song_energy_level
+        puts "Skipping #{candidate.inspect} because of energy level conflict. Song energy level is #{song_energy_level}"
+        songs.push(candidate)
+        next
+      end
+
+      # TODO check that song wasn't used in the same hour yesterday
+      # All conditions meet. Add song to playlist
+      puts "FOUND A SOLUTION FOR TImE #{current_time}"
+      playlist_entry = candidate.clone
+      playlist_entry[:timestamp] = current_time.to_i
+      playlist << candidate
+      current_time += candidate['duration']
+      songs_counter = songs.size
+
+      # See if at the end of this song, we're in a new hour. If so, then re-initialize things
+      new_hour = current_time / (60*60)
+      if new_hour > current_hour
+        current_hour_songs = []
+        current_time_energy_level = energy_level_at(current_time)
+        current_hour = new_hour
+      end
+      current_hour_songs << candidate
+
+      # See if we're done
+      if current_time >= end_time
+        break
+      end
+    end
+    return playlist
   end
 end
 
 options = {}
 opts = OptionParser.new
 opts.banner="Usage: playlist_generator [options]"
-opts.on('--playlist_dir', 'Where playlists are stored') do |opt|
+opts.on('--playlist_dir DIR', 'Where playlists are stored') do |opt|
   options[:playlist_dir] = opt
 end
-
+opts.on('--song_dir DIR', 'Where songs are stored') do |opt|
+  options[:song_dir] = opt
+end
 opts.on_tail('--help') do
   puts opts
   exit
 end
-
 opts.parse(ARGV)
 
-# Get songs library
-
-# Get blacklisted songs
-
-# Remove songs that have been blacklisted
-
-# Remove songs that we don't have
+server_url = "http://50.56.218.230"
+serial = "ddaoserialnumber"
 
 # Get energy level intervals
+response = RestClient.get File.join(server_url, "media_players/location_info.json"), {:params => {:serial => serial}}
+energy_level_intervals = JSON.parse(response.body)['energy_level_intervals']
+
+# Get songs library
+response = RestClient.get File.join(server_url, "media_players/songs_library.json"), {:params => {:serial => serial}}
+songs = JSON.parse(response.body)
+
+# Get blacklisted songs
+response = RestClient.get File.join(server_url, "media_players/blacklisted_songs.json"), {:params => {:serial => serial}}
+blacklisted_songs = JSON.parse(response.body)
+blacklisted_song_ids = blacklisted_songs.collect{|song| song['id']}
+
+# Remove songs that have been blacklisted or songs that we don't have on filesystem
+tmp_songs_list = []
+songs.each do |song|
+  if blacklisted_song_ids.include?(song['id'])
+    next
+  end
+  tmp_songs_list << song
+end
+songs = tmp_songs_list
+
+# Get previous playlist
+previous_playlist = nil
 
 # Start generating playlist
+puts energy_level_intervals.inspect
+generator = PlaylistGenerator.new(:energy_level_intervals => energy_level_intervals)
+playlist = generator.generate(songs, previous_playlist)
+puts playlist.inspect
