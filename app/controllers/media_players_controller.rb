@@ -108,13 +108,8 @@ class MediaPlayersController < ApplicationController
 
   def location_info
     result = {}
-    hostname = params[:hostname]
-    player = nil
     location = nil
-
-    if hostname
-      player = MediaPlayer.where(:hostname => hostname).first
-    end
+    player = find_media_player(params)
 
     if player
       location = player.location
@@ -129,7 +124,6 @@ class MediaPlayersController < ApplicationController
       end
     end
 
-
     respond_to do |format|
       format.json do
         render :json => result.to_json
@@ -137,6 +131,71 @@ class MediaPlayersController < ApplicationController
       format.html do
         render :text => result.inspect
       end
+    end
+  end
+
+  # Return arrays of songs this player supposed to have
+  def songs_library
+    songs = []
+    media_player = find_media_player(params)
+    begin
+      songs = media_player.location.group.songs_library
+    rescue
+      logger.error "Error fetching songs library for #{media_player.inspect}."
+    end
+    respond_to do |format|
+      format.json { render :json => songs.to_json}
+      format.html { render :text => songs.inspect}
+    end
+  end
+
+  # Return list of songs that have been blacklisted for a location
+  def blacklisted_songs
+    blacklisted_songs = []
+    media_player = find_media_player(params)
+    begin
+      blacklisted_songs = media_player.location.blacklisted_songs
+    rescue
+      logger.error "Error fetching blacklisted songs for #{media_player.inspect}"
+    end
+    respond_to do |format|
+      format.json { render :json => blacklisted_songs.to_json}
+      format.html { render :text => blacklisted_songs.inspect}
+    end
+  end
+
+  def playlists
+    result = {}
+    media_player = find_media_player(params)
+    begin
+      plists = media_player.location.group.playlists
+      plists.each do |pl|
+        logger.info pl.date
+        logger.info pl.content
+        logger.info "WTF"
+        logger.info JSON.parse(pl.content)
+        logger.info "WWWWWWWWWWWWw"
+        result[pl.date] = JSON.parse(pl.content)
+      end
+    rescue => e
+      logger.info e
+    end
+    respond_to do |format|
+      format.html { render :text => result.inspect }
+      format.json { render :json => result }
+    end
+  end
+
+  private
+  def find_media_player(params)
+    if params[:id]
+      return MediaPlayer.find(params[:id])
+    elsif params[:serial]
+      MediaPlayer.where(:serial => params[:serial]).first
+    elsif params[:hostname]
+      MediaPlayer.where(:hostname => params[:hostname]).first
+    elsif params[:ip_address]
+      MediaPlayer.where(:ip_address => params[:ip_address]).first
     end
   end
 end

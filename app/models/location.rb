@@ -12,4 +12,12 @@ class Location < ActiveRecord::Base
                                 :reject_if => proc {|attrs|
                                   [:hostname, :serial].all? {|k| attrs[k].blank?}
                                 }
+
+  def blacklisted_songs
+    ret = []
+    ::BlackList.where(:location_id => id).includes(:song).each do | blacklist |
+      ret << blacklist.song.entry_for_playlist
+    end
+    ret
+  end
 end
