@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+
+def ClientSidePlaylistGenerator
+  def generate(songs_list, previous_playlist, start_time=0, end_time = 86400)
+
+  end
+end
+
+options = {}
+opts = OptionParser.new
+opts.banner="Usage: playlist_generator [options]"
+opts.on('--playlist_dir', 'Where playlists are stored') do |opt|
+  options[:playlist_dir] = opt
+end
+
+opts.on_tail('--help') do
+  puts opts
+  exit
+end
+
+opts.parse(ARGV)
+
+# Get songs library
+
+# Get blacklisted songs
+
+# Remove songs that have been blacklisted
+
+# Remove songs that we don't have
+
+# Get energy level intervals
+
+# Start generating playlist

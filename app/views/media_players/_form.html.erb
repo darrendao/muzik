@@ -12,7 +12,7 @@
   <% end %>
 
   <div class="field">
-    <% location_array = Location.order('address').collect {|s| [s.address, s.id]} %>
+    <% location_array = Location.order('name').collect {|s| ["#{s.name} | #{s.address}", s.id]} %>
     <%= f.label :location_id %><br />
     <%= f.select :location_id, options_for_select(location_array, @media_player.location_id), { :include_blank => true} %>
   </div>
