@@ -8,10 +8,10 @@ class Location < ActiveRecord::Base
   belongs_to :group
   has_many :black_lists
   has_one :media_player
-  accepts_nested_attributes_for :media_player, :allow_destroy => true,
-                                :reject_if => proc {|attrs|
-                                  [:hostname, :serial].all? {|k| attrs[k].blank?}
-                                }
+  accepts_nested_attributes_for :media_player, :allow_destroy => true
+#                                :reject_if => proc {|attrs|
+#                                  [:hostname, :serial].all? {|k| attrs[k].blank?}
+#                                }
 
   def blacklisted_songs
     ret = []
