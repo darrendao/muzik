@@ -50,12 +50,14 @@ class PlaylistsController < ApplicationController
 
     gen = PlaylistGenerator.new
 
+    previous_playlist = Playlist.where(:group_id => @group.id, :date => start_date - 1).first
+
     @playlists = []
     success = true
     (start_date..end_date).each do |date|
       pl = Playlist.find_or_create_by_date_and_group_id(date, @group.id)
       logger.info "GOING TO GENERATE"
-      songslist = gen.generate(@group, @playlists[-1])
+      songslist = gen.generate(@group, previous_playlist)
 
       unless songslist
         success = false
@@ -64,6 +66,7 @@ class PlaylistsController < ApplicationController
       pl.content = songslist.to_json
       pl.save
       @playlists << pl
+      previous_playlist = @playlists[-1]
     end
     if !success
       render :text => "Failed to generate playlist. Most likely there isn't enough songs and/or rules are too restrictive."
