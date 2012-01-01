@@ -5,6 +5,26 @@ require 'optparse'
 require 'rest-client'
 require 'json'
 require 'time'
+require 'date'
+
+class Playlist
+  attr_accessor :entries
+  def initialize
+    @entries = []
+  end
+  def songs_in_interval(start_time, end_time)
+    songs = []
+    @entries.each do |song|
+      songs << song if start_time <= song['timestamp'] && song['timestamp'] <= end_time
+    end
+    songs
+  end
+  def songs_in_hour(hour)
+    start_time = hour*60*60
+    end_time = (hour + 1)*60*60
+    songs_in_interval(start_time, end_time)
+  end
+end
 
 class PlaylistGenerator
   def initialize(options)
@@ -33,7 +53,7 @@ class PlaylistGenerator
   end
 
   def generate(songs, previous_playlist, start_time=0, end_time = 86400)
-    playlist = []
+    playlist = Playlist.new
     songs_counter = songs.size
     current_time = start_time              # seconds since midnight
     current_hour = start_time / (60*60)    # hours since midnight
@@ -41,17 +61,17 @@ class PlaylistGenerator
     current_time_energy_level = energy_level_at(current_time)
 
     while candidate = songs.shift
-      puts "Current energy level is #{current_time_energy_level.inspect}"
+      #puts "Current energy level is #{current_time_energy_level.inspect}"
       songs_counter = songs_counter - 1
       if songs_counter < 0
-        puts "WTFFFFFFFFFFFFFF"
+        puts "OH NO... ran out of songs"
         return nil
       end
 
       # Don't play songs of the same artist or album that have been played during the last hour
       if current_hour_songs.any?{|song| song['artist'] == candidate['artist'] or song['album'] == candidate['album']}
         #logger.debug "Skipping #{candidate.title} because of artist or album conflict"
-        puts "Skipping #{candidate.inspect} because of artist or album conflict"
+        #puts "Skipping #{candidate.inspect} because of artist or album conflict"
         songs.push(candidate)
         next
       end
@@ -60,17 +80,25 @@ class PlaylistGenerator
       # If no energy level specified for current time, then we don't care
       song_energy_level = candidate['energy_level_id']
       if current_time_energy_level && current_time_energy_level != song_energy_level
-        puts "Skipping #{candidate.inspect} because of energy level conflict. Song energy level is #{song_energy_level}"
+        #puts "Skipping #{candidate.inspect} because of energy level conflict. Song energy level is #{song_energy_level}"
         songs.push(candidate)
         next
       end
 
-      # TODO check that song wasn't used in the same hour yesterday
+      # check that song wasn't used in the same hour yesterday
+      if previous_playlist
+        songs_to_avoid = previous_playlist.songs_in_hour(current_hour)
+        if songs_to_avoid.any?{|s| s['file_path'] == candidate['file_path']}
+          songs.push(candidate)
+          next
+        end
+      end
+
       # All conditions meet. Add song to playlist
-      puts "FOUND A SOLUTION FOR TImE #{current_time}"
+      #puts "FOUND A SOLUTION FOR TImE #{current_time}"
       playlist_entry = candidate.clone
-      playlist_entry[:timestamp] = current_time.to_i
-      playlist << candidate
+      playlist_entry['timestamp'] = current_time.to_i
+      playlist.entries << playlist_entry
       current_time += candidate['duration']
       songs_counter = songs.size
 
@@ -100,6 +128,9 @@ opts.on('--playlist_dir DIR', 'Where playlists are stored') do |opt|
 end
 opts.on('--song_dir DIR', 'Where songs are stored') do |opt|
   options[:song_dir] = opt
+end
+opts.on('--days NUMBER', Integer, 'How many days to generate playlists for') do |opt|
+  options[:days] = opt
 end
 opts.on_tail('--help') do
   puts opts
@@ -133,11 +164,19 @@ songs.each do |song|
 end
 songs = tmp_songs_list
 
-# Get previous playlist
+# TODO: Get previous playlist
 previous_playlist = nil
 
 # Start generating playlist
-puts energy_level_intervals.inspect
+result = {}
+date = Date.today
+days = options[:days] || 1
 generator = PlaylistGenerator.new(:energy_level_intervals => energy_level_intervals)
-playlist = generator.generate(songs, previous_playlist)
-puts playlist.inspect
+(0...days).each do |day|
+  date = date + day
+  playlist = generator.generate(songs.clone, previous_playlist)
+  result[date] = playlist.entries if playlist
+  previous_playlist = playlist
+end
+
+puts result.to_json
