@@ -1,5 +1,6 @@
 class BusinessHour < ActiveRecord::Base
   belongs_to :schedulable, :polymorphic => true
+  default_scope :order => 'business_hours.wday'
   def initialize(*args)
     super(*args)
     if wday && wday !~ /\d/

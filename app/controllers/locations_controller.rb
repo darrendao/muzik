@@ -25,8 +25,9 @@ class LocationsController < ApplicationController
   # GET /locations/new.json
   def new
     @location = Location.new
-    (1..7).each do |i|
-      @location.business_hours.build
+    (0..6).each do |i|
+      bus_hour = @location.business_hours.build
+      bus_hour.wday = i
     end
 
     respond_to do |format|
@@ -38,9 +39,17 @@ class LocationsController < ApplicationController
   # GET /locations/1/edit
   def edit
     @location = Location.find(params[:id])
-    (@location.business_hours.size..7).each do |i|
-      @location.business_hours.build
+    existing_business_days = []
+    @location.business_hours.each do |i|
+      existing_business_days << i.wday
     end
+    (0..6).each do |i|
+      next if existing_business_days.include? i
+      loc = @location.business_hours.build
+      loc.wday = i
+    end
+    @location.business_hours.sort!{|x,y| x.wday <=> y.wday}
+
   end
 
   # POST /locations
