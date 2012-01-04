@@ -48,6 +48,12 @@ class LocationsController < ApplicationController
   def create
     @location = Location.new(params[:location])
 
+    if @location.media_player
+      unless !@location.media_player.serial.empty? or @location.media_player.hostname or !@location.media_player.ip_address.empty?
+        @location.media_player.destroy
+      end
+    end
+
     respond_to do |format|
       if @location.save
         format.html { redirect_to @location, :notice => 'Location was successfully created.' }

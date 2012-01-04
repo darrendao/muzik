@@ -16,6 +16,7 @@
   <thead>
   <tr>
     <th></th>
+    <th>Name</th>
     <th>Address</th>
     <th>Phone Number</th>
   </tr>
@@ -28,6 +29,7 @@
                     :method => 'get', :remote => true, :confirm => "Are you sure?" %> |
       <%= link_to 'View', location %>
     </td>
+    <td><%= location.name %></td>
     <td><%= location.address %></td>
     <td><%= location.phone_number %></td>
   </tr>

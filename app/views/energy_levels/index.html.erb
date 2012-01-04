@@ -3,12 +3,6 @@
     $("#energy_level_table").dataTable({
                                  "aoColumn"        : [{"bSortable":false}],
                                  "bJQueryUI"       : true,
-                                 "fnRowCallback"   : function( nRow, aData, iDisplayIndex ) {
-                                            if ( jQuery.inArray(aData[0], gaiSelected) != -1 ){
-                                                  $(nRow).addClass('row_selected');
-                                            }
-                                     return nRow;
-                                  },
                                  "aoColumnDefs"    : [{"bVisible":false, "aTargets":[0]}, {"bSortable":false, "aTargets":[1]}],
                                  "bProcessing"     : false,
                                  "bServerSide"     : false,
