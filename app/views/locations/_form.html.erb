@@ -31,7 +31,8 @@
     Business Hours<br />
     <%= f.fields_for :business_hours do |ff| %>
       <%= ff.select :wday, BusinessHour.day_options %>
-      open from <%= ff.text_field :open_at, :class => 'timefield' %> to <%= ff.text_field :close_at, :class => 'timefield' %><br/>
+      open from <%= ff.text_field :open_at, :value => ff.object.open_at_str, :class => 'timefield' %>
+      to  <%= ff.text_field :close_at, :value => ff.object.close_at_str, :class => 'timefield' %><br/>
     <% end %>
   </div>
 
@@ -60,7 +61,5 @@
 <% end %>
 
 <script type="text/javascript">
-  $(".timefield").AnyTime_picker(
-    { format: "%H:%i", labelTitle: "Hour",
-      labelHour: "Hour", labelMinute: "Minute" } );
+  $('.timefield').timepicker({});
 </script>
