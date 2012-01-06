@@ -19,7 +19,8 @@
   <div class="field">
     Energy Level Intervals:<br/>
     <%= f.fields_for :energy_level_intervals do |ff| %>
-      <%= ff.text_field :start_at, :class => 'timefield' %> to <%= ff.text_field :end_at, :class => 'timefield' %>
+      <%= ff.text_field :start_at, :value => ff.object.start_at_str, :class => 'timefield' %> to
+      <%= ff.text_field :end_at, :value => ff.object.end_at_str, :class => 'timefield' %>
       <%= ff.select :energy_level_id, EnergyLevel.order('elevel').collect{|e| [ "#{e.name}(#{e.elevel})", e.id]} %><br/>
     <% end %>
   </div>
@@ -31,7 +32,5 @@
 
 
 <script type="text/javascript">
-  $(".timefield").AnyTime_picker(
-    { format: "%H:%i", labelTitle: "Hour",
-      labelHour: "Hour", labelMinute: "Minute" } );
+  $('.timefield').timepicker({});
 </script>

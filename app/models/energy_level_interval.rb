@@ -13,4 +13,11 @@ class EnergyLevelInterval < ActiveRecord::Base
       return false
     end
   end
+
+  def start_at_str
+    start_at ? start_at.strftime("%H:%M") : ""
+  end
+  def end_at_str
+    end_at ? end_at.strftime("%H:%M") : ""
+  end
 end
