@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'rubygems'
+require 'facter'
 require 'optparse'
 require 'rest-client'
 require 'json'
@@ -122,7 +123,12 @@ class PlaylistGenerator
 end
 
 def get_serial
-  # TODO
+  Facter.loadfacts
+  if Facter['serialnumber']
+    return Facter['serialnumber'].value
+  else
+    return nil
+  end
 end
 
 def playlist_on(playlist_file, target_date)
@@ -169,8 +175,6 @@ serial = options[:serial] || get_serial
 playlist_dir = options[:playlist_dir] || "."
 playlist_file = File.join(playlist_dir, 'playlist.json')
 
-puts serial.inspect
-
 if serial.nil?
   raise "Unable to determine serial number"
 end
@@ -203,7 +207,7 @@ result = {}
 yesterday = Date.today - 1
 if File.exists?(playlist_file)
   previous_playlist = playlist_on(playlist_file, yesterday)
-  result[yesterday] = previous_playlist.entries
+  result[yesterday] = previous_playlist.entries if previous_playlist
 else
   previous_playlist = nil
 end
