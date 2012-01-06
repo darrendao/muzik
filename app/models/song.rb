@@ -22,13 +22,16 @@ class Song < ActiveRecord::Base
     format('%02d:%02d', *duration.divmod(60))
   end
 
-  def entry_for_playlist
-    return {:id => id,
-            :title => title,
-#            :artist => artist,
-#            :album => belongs_to_album,
+  def entry_for_playlist(long_entry=false)
+    ret =  {:id => id,
             :file_path => file_path,
             :duration => duration.to_i
            }
+    if long_entry
+      ret[:title] = title
+      ret[:artist] = artist
+      ret[:album] = belongs_to_album
+    end
+    ret
   end
 end

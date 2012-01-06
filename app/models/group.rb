@@ -38,7 +38,7 @@ class Group < ActiveRecord::Base
     result = []
     gsas = GroupSongAssignment.where(:group_id => id).includes(:song, :energy_level)
     gsas.each do |gsa|
-      song = gsa.song.entry_for_playlist
+      song = gsa.song.entry_for_playlist(true)
       song[:energy_level] = gsa.energy_level.name
       song[:energy_level_value] = gsa.energy_level.elevel
       song[:energy_level_id] = gsa.energy_level.id

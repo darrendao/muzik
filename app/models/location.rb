@@ -16,7 +16,7 @@ class Location < ActiveRecord::Base
   def blacklisted_songs
     ret = []
     ::BlackList.where(:location_id => id).includes(:song).each do | blacklist |
-      ret << blacklist.song.entry_for_playlist
+      ret << blacklist.song.entry_for_playlist(true)
     end
     ret
   end
