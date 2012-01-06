@@ -9,8 +9,8 @@ require 'date'
 
 class Playlist
   attr_accessor :entries
-  def initialize
-    @entries = []
+  def initialize(entries = [])
+    @entries = entries
   end
   def songs_in_interval(start_time, end_time)
     songs = []
@@ -28,7 +28,7 @@ end
 
 class PlaylistGenerator
   def initialize(options)
-    @energy_level_intervals = options[:energy_level_intervals]
+    @energy_level_intervals = options[:energy_level_intervals] || []
 
     # Update intervals to be in seconds to make it easier to calculate later on
     @energy_level_intervals.each do |eli|
@@ -53,6 +53,7 @@ class PlaylistGenerator
   end
 
   def generate(songs, previous_playlist, start_time=0, end_time = 86400)
+    songs.shuffle!
     playlist = Playlist.new
     songs_counter = songs.size
     current_time = start_time              # seconds since midnight
@@ -71,7 +72,7 @@ class PlaylistGenerator
       # Don't play songs of the same artist or album that have been played during the last hour
       if current_hour_songs.any?{|song| song['artist'] == candidate['artist'] or song['album'] == candidate['album']}
         #logger.debug "Skipping #{candidate.title} because of artist or album conflict"
-        #puts "Skipping #{candidate.inspect} because of artist or album conflict"
+        puts "Skipping #{candidate.inspect} because of artist or album conflict"
         songs.push(candidate)
         next
       end
@@ -80,7 +81,7 @@ class PlaylistGenerator
       # If no energy level specified for current time, then we don't care
       song_energy_level = candidate['energy_level_id']
       if current_time_energy_level && current_time_energy_level != song_energy_level
-        #puts "Skipping #{candidate.inspect} because of energy level conflict. Song energy level is #{song_energy_level}"
+        puts "Skipping #{candidate.inspect} because of energy level conflict. Song energy level is #{song_energy_level}"
         songs.push(candidate)
         next
       end
@@ -120,6 +121,25 @@ class PlaylistGenerator
   end
 end
 
+def get_serial
+  # TODO
+end
+
+def playlist_on(playlist_file, target_date)
+  playlist = JSON.parse(File.read(playlist_file))
+  playlist.each do |date, value|
+    return Playlist.new(value) if Date.parse(date) == target_date
+  end
+  nil
+end
+
+def save_playlist(playlist, outfile)
+  puts "Writing playlist to #{outfile}"
+  File.open(outfile, 'w') do |f|
+    f.write(playlist.to_json)
+  end
+end
+
 options = {}
 opts = OptionParser.new
 opts.banner="Usage: playlist_generator [options]"
@@ -132,14 +152,28 @@ end
 opts.on('--days NUMBER', Integer, 'How many days to generate playlists for') do |opt|
   options[:days] = opt
 end
+opts.on('--server URL', 'URL for where the server is running') do |opt|
+  options[:server_url] = opt
+end
+opts.on('--serial STRING', 'Explicitly specify the serial number of the client to generate playlist for') do |opt|
+  options[:serial] = opt
+end
 opts.on_tail('--help') do
   puts opts
   exit
 end
 opts.parse(ARGV)
 
-server_url = "http://50.56.218.230"
-serial = "ddaoserialnumber"
+server_url = options[:server_url] || "http://50.56.218.230"
+serial = options[:serial] || get_serial
+playlist_dir = options[:playlist_dir] || "."
+playlist_file = File.join(playlist_dir, 'playlist.json')
+
+puts serial.inspect
+
+if serial.nil?
+  raise "Unable to determine serial number"
+end
 
 # Get energy level intervals
 response = RestClient.get File.join(server_url, "media_players/location_info.json"), {:params => {:serial => serial}}
@@ -164,11 +198,19 @@ songs.each do |song|
 end
 songs = tmp_songs_list
 
-# TODO: Get previous playlist
-previous_playlist = nil
+result = {}
+
+yesterday = Date.today - 1
+if File.exists?(playlist_file)
+  previous_playlist = playlist_on(playlist_file, yesterday)
+  result[yesterday] = previous_playlist.entries
+else
+  previous_playlist = nil
+end
+
+puts "Previous play list is #{previous_playlist}"
 
 # Start generating playlist
-result = {}
 date = Date.today
 days = options[:days] || 1
 generator = PlaylistGenerator.new(:energy_level_intervals => energy_level_intervals)
@@ -179,4 +221,6 @@ generator = PlaylistGenerator.new(:energy_level_intervals => energy_level_interv
   previous_playlist = playlist
 end
 
-puts result.to_json
+if result
+  save_playlist(result, playlist_file)
+end
