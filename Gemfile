@@ -5,7 +5,7 @@ gem 'rails', '3.1.3'
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3'
+#gem 'sqlite3'
 gem 'mysql2'
 gem 'json'
 gem 'ruby-mp3info'
@@ -16,6 +16,7 @@ gem 'acts-as-taggable-on', '~>2.2.0'
 gem 'jsonify'
 gem 'jsonify-rails'
 gem 'simple_datatables'
+gem 'nokogiri'
 
 # Gems used only for assets and not required
 # in production environments by default.

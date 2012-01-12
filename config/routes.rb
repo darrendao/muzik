@@ -35,7 +35,12 @@ Muzik::Application.routes.draw do
     end
   end
 
-  resources :group_song_assignments
+  resources :group_song_assignments do
+    collection do
+      get 'upload_itunes_plist'
+      post 'upload_itunes_plist'
+    end
+  end
 
   resources :song_libraries
 

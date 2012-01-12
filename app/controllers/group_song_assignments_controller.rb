@@ -94,4 +94,66 @@ class GroupSongAssignmentsController < ApplicationController
       format.json { head :ok }
     end
   end
+
+  def upload_itunes_plist
+    return if !params[:group_song_assignment]
+    
+    songs = parse_itunes_plist(params[:group_song_assignment][:uploaded_itunes_plist])
+
+    tmp = parse_itunes_plist_filename(params[:group_song_assignment][:uploaded_itunes_plist].original_filename)
+    group_name = tmp[:client]
+
+    energy_level = EnergyLevel.where(:name => tmp[:energy_level]).first
+    group = Group.where(:name => group_name).first
+    assign_songs_to_group(songs, group, energy_level)
+  end
+
+  private
+  def parse_itunes_plist_filename(filename)
+    result = {}
+    tokens = filename.split('.')
+    if tokens.size != 6
+      result[:error] = "Invalid filename standard. Unable to figure out client name and energy level"
+      return result
+    end
+
+    result[:client] = tokens[1]
+    result[:energy_level] = tokens[4]
+    result
+  end
+
+  def parse_itunes_plist(itunes_plist)
+    Tpg::ItunesPlistParser::parse(itunes_plist)
+  end
+
+  # TODO: need to worry about ACID properties
+  def assign_songs_to_group(songs_list, group, energy_level)
+    gsas = []
+    songs_list.each do |song_hash|
+      song = Song.where(:itunes_persistent_id => song_hash['Persistent ID']).first
+      # Create song if it's not there
+      if song.nil?
+        song = create_song(song_hash)
+      end
+
+      gsas << GroupSongAssignment.new(:song_id => song.id, :group_id => group.id, :energy_level_id => energy_level.id)
+    end
+
+    # Create group_song_assignments. This will also blow out the old assignments
+    # TODO: figure out how to mass delete and mass insert to speed things up
+    group.group_song_assignments = gsas
+  end
+
+  def create_song(song_hash)
+    artist = song_hash['Artist']
+    album = song_hash['Album']
+    title = song_hash['Name']
+    filename = "#{Tpg::Utils::md5_from_meta([artist, album, title])}.mp3"
+    Song.create(:title => title,
+                :belongs_to_album => album,
+                :artist => artist,
+                :itunes_persistent_id => song_hash['Persistent ID'],
+                :duration => song_hash['Total Time'].to_i / 1000,
+                :file_path => filename)
+  end
 end
