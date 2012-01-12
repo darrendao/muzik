@@ -1,0 +1,81 @@
+<script type="text/javascript">
+  var gaiSelected =  [];
+  var oTable;
+  $(document).ready(function() {
+    oTable = $("#songstable").dataTable({
+               "bProcessing"     : true,
+               "bServerSide"     : true,
+               "bJQueryUI"       : true,
+               "bAutoWidth": false,
+               "sPaginationType" : "full_numbers",
+               "aoColumnDefs"    : [{"bVisible":false, "aTargets":[0]}, {"bSortable":false, "aTargets":[1]}],
+               "aaSorting"       : [[2, 'asc']],
+               "fnRowCallback"   : function( nRow, aData, iDisplayIndex ) {
+       			  if ( jQuery.inArray(aData[0], gaiSelected) != -1 )
+       			  {
+	       			$(nRow).addClass('row_selected');
+		       	  }
+                  return nRow;
+               },
+               "sAjaxSource"     : "/songs/datatable2.json" });
+
+    /* Click event handler */
+    $('#songstable tbody tr').live('click', function () {
+      var aData = oTable.fnGetData( this );
+      var iId = aData[0];
+
+      if ( jQuery.inArray(iId, gaiSelected) == -1 )
+      {
+        gaiSelected[gaiSelected.length++] = iId;
+      }
+      else
+      {
+        gaiSelected = jQuery.grep(gaiSelected, function(value) {
+          return value != iId;
+          } );
+		}
+      $(this).toggleClass('row_selected');
+	} );
+
+    $('#blacklist_songs').click( function() {
+      $.ajax({
+              type: "GET",
+              url: "/locations/blacklist_songs",
+              data: "location_id=<%= @location.id%>&song_ids="+gaiSelected,
+              success: function(data){
+                  gaiSelected =  [];
+                  oTable.fnDraw();
+              }
+            });
+      return false;
+	} );
+  });
+</script>
+
+<div id = "select_songs_to_blacklist" style='display:none'>
+<h3>Select Songs to Blacklist</h3>
+
+<table id="songstable" class="display">
+  <thead>
+    <tr>
+      <th>id</th>
+      <th></th>
+      <th>Title</th>
+      <th>Artist</th>
+      <th>Album</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+<%= jquery_ui_button_icon("Blacklist Selected Song(s)", "ui-icon-plusthick", "blacklist_songs").html_safe %>
+<br/>
+</div>
+
+<%= link_to jquery_ui_button_icon("Add Blacklisted Song", "ui-icon-plusthick", "addbls").html_safe , "#select_songs_to_blacklist", :class => 'nyroModal' %>
+<script type="text/javascript">
+    $(function() {
+        $('.nyroModal').nyroModal();
+    });
+</script>
+

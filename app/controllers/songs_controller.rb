@@ -105,6 +105,17 @@ class SongsController < ApplicationController
     end
   end
 
+  def datatable2
+    respond_to do |format|
+      format.json do
+        render(:json => Song.for_data_table(self, %w(id nil title artist belongs_to_album), %w(id title artist belongs_to_album)) do |song|
+          action_links = "<a href='/songs/#{song.id}'>View</a>"
+          [song.id, action_links, song.title, song.artist, song.belongs_to_album]
+        end)
+      end
+    end
+  end
+
   def add_tag
     logger.info params.inspect
     @song = Song.find(params[:id])

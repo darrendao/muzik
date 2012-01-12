@@ -1,3 +1,4 @@
+
 <p id="notice"><%= notice %></p>
 
 <p>
@@ -43,13 +44,11 @@
   <%= render 'black_list' %>
 </div>
 
-<div id="add_black_list" style="display:none">
-  <%= render :partial => 'add_black_list' %>
-</div>
-<div id="add_black_list_link">
-  <%= link_to_function jquery_ui_button_icon("Add Blacklisted Song", "ui-icon-plusthick", "addbls").html_safe , "$('#add_black_list').show(); $('#add_black_list_link').hide()" %>
+<div id="add_black_list">
+  <%= render :partial => 'select_songs_to_blacklist' %>
 </div>
 
 <br />
 <%= link_to 'Edit', edit_location_path(@location) %> |
 <%= link_to 'Back', locations_path %>
+

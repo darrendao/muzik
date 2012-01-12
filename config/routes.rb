@@ -26,6 +26,7 @@ Muzik::Application.routes.draw do
     collection do
       get 'datatable'
       get 'delete'
+      get 'blacklist_songs'
     end
   end
 
@@ -62,6 +63,7 @@ Muzik::Application.routes.draw do
     collection do
       get 'upload'
       get 'datatable'
+      get 'datatable2'
       get 'autocomplete_song_title'
       post 'add_tag'
     end

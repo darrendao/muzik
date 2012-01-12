@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111228234059) do
+ActiveRecord::Schema.define(:version => 20120111220542) do
 
   create_table "black_lists", :force => true do |t|
     t.integer  "location_id"
@@ -108,7 +108,10 @@ ActiveRecord::Schema.define(:version => 20111228234059) do
     t.string   "mp3_content_type"
     t.integer  "mp3_file_size"
     t.datetime "mp3_updated_at"
+    t.string   "itunes_persistent_id"
   end
+
+  add_index "songs", ["itunes_persistent_id"], :name => "index_songs_on_itunes_persistent_id"
 
   create_table "taggings", :force => true do |t|
     t.integer  "tag_id"

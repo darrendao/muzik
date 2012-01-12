@@ -1,5 +1,6 @@
-You don't have to specify group name and energy level if your playlist filename is of the correct naming convention.
-<%= form_for(:group_song_assignment, :url => {:action => 'upload_itunes_plist'},:html => { :multipart => true }) do |form| %> 
+<h3>Upload Group Songs List</h3>
+
+<%= form_for(:group_song_assignment, :url => {:action => 'upload_itunes_plist'},:html => { :multipart => true }) do |form| %>
   <div>
     Energy Level (Optional):
     <%= form.select :energy_level_id, EnergyLevel.order('elevel').collect{|e| [ "#{e.name}(#{e.elevel})", e.id]}, { :include_blank => true} %>

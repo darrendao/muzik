@@ -126,4 +126,17 @@ class LocationsController < ApplicationController
       end
     end
   end
+
+  def blacklist_songs
+    song_ids = params[:song_ids]
+    location_id = params[:location_id]
+    song_ids.split(",").each do |id|
+      bl = BlackList.new
+      bl.location_id = location_id
+      bl.song_id = id
+      bl.save
+    end
+    @location = Location.find(location_id)
+    render "/locations/update_blacklisttable"
+  end
 end
