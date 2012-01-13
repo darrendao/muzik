@@ -1,6 +1,3 @@
-
-<p id="notice"><%= notice %></p>
-
 <p>
   <b>Name:</b>
   <%= @location.name %>
@@ -27,6 +24,11 @@
 </p>
 
 <p>
+  <b>Holiday Song Period:</b>
+  <%= @location.holiday_song_period.period if @location.holiday_song_period %>
+</p>
+
+<p>
   <b>Business hours:</b><br/>
   <% @location.business_hours.each do |business_hour| %>
     <%= Date::ABBR_DAYNAMES[business_hour.wday] %> from <%= business_hour.open_at.strftime("%H:%M") %>
@@ -34,10 +36,26 @@
   <% end %>
 </p>
 <br />
+
+<h3>Holiday Schedules</h3>
+<div class="infobox">
+  <div id="holiday_schedules" class="schedules">
+    <%= render :partial => '/schedules/list', :locals => {:schedules => @location.schedules.special} %>
+  </div>
+  <div id="add_special_schedule" style="display:none">
+   <%= render :partial => 'add_special_schedule' %>
+ </div>
+ <div id="add_special_schedule_link">
+   <%= link_to_function jquery_ui_button_icon("Add Holiday Schedules", "ui-icon-plusthick", "addhs").html_safe , "$('#add_special_schedule').show(); $('#add_special_schedule_link').hide()" %>
+  </div>
+</div>
+<br/>
+
 <h3>Media Player Info</h3>
 <div id="media_player" class="infobox">
   <%= render 'media_player' %>
 </div>
+<br />
 
 <h3>Blacklisted Songs</h3>
 <div id="black_list">

@@ -1,4 +1,7 @@
 Muzik::Application.routes.draw do
+
+  resources :holiday_song_periods
+
   resources :media_players do
     collection do
       get 'datatable'
@@ -11,7 +14,7 @@ Muzik::Application.routes.draw do
   end
 
   resources :dashboard
-  resources :group_holiday_schedules
+#  resources :group_holiday_schedules
 
   resources :playlists do
     collection do
@@ -22,12 +25,13 @@ Muzik::Application.routes.draw do
 
   resources :energy_levels
 
-  resources :locations do
+  resources :locations, :shallow => true do
     collection do
       get 'datatable'
       get 'delete'
       get 'blacklist_songs'
     end
+    resources :schedules
   end
 
   resources :black_lists do
@@ -50,7 +54,7 @@ Muzik::Application.routes.draw do
       get 'datatable'
       get 'remove_location'
       post 'add_location'
-      post 'add_holiday_schedule'
+#      post 'add_holiday_schedule'
       get 'delete'
       get 'playlists'
       get 'songstable'

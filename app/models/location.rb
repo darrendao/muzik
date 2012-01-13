@@ -1,4 +1,8 @@
 class Location < ActiveRecord::Base
+  has_one :holiday_song_period, :dependent => :destroy
+  accepts_nested_attributes_for :holiday_song_period, :allow_destroy => true
+
+  has_many :schedules, :dependent => :destroy
   has_many :business_hours, :as => :schedulable
   accepts_nested_attributes_for :business_hours, :allow_destroy => true,
                                 :reject_if => proc {|attrs|
@@ -20,4 +24,5 @@ class Location < ActiveRecord::Base
     end
     ret
   end
+
 end

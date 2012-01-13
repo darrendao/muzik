@@ -35,6 +35,12 @@
       to  <%= ff.text_field :close_at, :value => ff.object.close_at_str, :class => 'timefield' %><br/>
     <% end %>
   </div>
+  <div class="field">
+    <%= f.fields_for :holiday_song_period do |ff| %>
+      <%= ff.label :holiday_song_period %><br />
+      <%= ff.text_field :period %>
+    <% end %>
+  </div>
 
   <div>
     <strong>Media Player:</strong><br/>

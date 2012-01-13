@@ -1,0 +1,11 @@
+<%= form_for [@location, @location.schedules.build], :method => :post, :remote => true do |f|%>
+  Name: <%= f.text_field 'name' %>
+  from <%= f.text_field 'start_at', :class=> 'datetimefield' %>
+  to <%= f.text_field 'end_at', :class=> 'datetimefield' %>
+  <%= f.submit "Add" %>
+  | <%= link_to_function 'Cancel', "$('#add_special_schedule').hide(); $('#add_special_schedule_link').show()" %>
+<% end %>
+
+<script type="text/javascript">
+  $(".datetimefield").AnyTime_picker({ format: "%W, %M %D, %z", firstDOW: 1 } );
+</script>

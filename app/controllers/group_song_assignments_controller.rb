@@ -106,6 +106,7 @@ class GroupSongAssignmentsController < ApplicationController
     energy_level = EnergyLevel.where(:name => tmp[:energy_level]).first
     group = Group.where(:name => group_name).first
     assign_songs_to_group(songs, group, energy_level)
+    flash[:notice] = 'Songs list was successfully uploaded.'
   end
 
   private
@@ -127,6 +128,7 @@ class GroupSongAssignmentsController < ApplicationController
   end
 
   # TODO: need to worry about ACID properties
+  # TODO: check return statuses of method calls
   def assign_songs_to_group(songs_list, group, energy_level)
     gsas = []
     songs_list.each do |song_hash|
