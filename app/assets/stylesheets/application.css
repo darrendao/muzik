@@ -152,7 +152,15 @@ body {
 	        margin-bottom: 1em;
 	}
 
-
+.infobox2
+{
+    background-color: #FDF2E8;
+    border-color: gray;
+    border-width: 1px 0;
+    border-style: solid;
+    padding: 1em 0.8em 0.8em 1em;
+    margin-bottom: 1em;
+}
 
 
 /* css for timepicker */

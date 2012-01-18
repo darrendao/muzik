@@ -10,3 +10,15 @@
 //= require jquery-ui
 //= require autocomplete-rails
 
+function formatTime(time){
+  if (time >= 1439){
+    return "23:59"
+  }
+  var hours = parseInt(time / 60 % 24);
+  var minutes = parseInt(time % 60);
+  minutes = minutes + "";
+  if (minutes.length == 1) {
+    minutes = "0" + minutes;
+  }
+  return hours + ":" + minutes;
+}

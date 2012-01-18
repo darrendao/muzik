@@ -27,6 +27,7 @@
     <%= f.label :contact_name %><br />
     <%= f.text_field :contact_name %>
   </div>
+<!--
   <div class="field">
     Business Hours<br />
     <%= f.fields_for :business_hours do |ff| %>
@@ -35,6 +36,7 @@
       to  <%= ff.text_field :close_at, :value => ff.object.close_at_str, :class => 'timefield' %><br/>
     <% end %>
   </div>
+ -->
   <div class="field">
     <%= f.fields_for :holiday_song_period do |ff| %>
       <%= ff.label :holiday_song_period %><br />

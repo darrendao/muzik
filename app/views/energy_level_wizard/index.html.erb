@@ -1,0 +1,75 @@
+<% if !@schedule.energy_level_intervals_by_wday.empty? %>
+<div id="energy_level_intervals" class='infobox2'>
+<%= form_tag url_for(:action => 'update_energy_level_intervals') do %>
+  <div style="text-align:center">
+    <%= submit_tag 'Save Changes' %> or <%= link_to 'Back to Location Page', location_path(@schedule.location) %>
+  </div>
+  <% @schedule.energy_level_intervals_by_wday.each do |wday, elis| %>
+    <div style="padding-bottom:5px">
+    <strong><%= Date::DAYNAMES[wday] %></strong></strong><br/>
+    <% elis.each do |eli| %>
+      <%= render :partial => 'energy_level_interval', :locals => {:eli => eli, :readonly => false} %>
+      <br/>
+    <% end %>
+    </div>
+  <% end %>
+<% end %>
+</div>
+<% end %>
+
+<br/>
+<div id="add_energy_level_interval" class="infobox">
+Add new energy level interval
+<%= form_for :energy_level_interval, :url => {:controller => 'energy_level_wizard', :action => 'add_energy_level_interval'}, :method => :post do |f|%>
+  <% Date::ABBR_DAYNAMES.each_with_index do|x,y| %>
+    <%= check_box_tag 'dates[]', y, false, :class => 'energy_level_interval_date' %> <%= x %>
+  <% end %>
+  (<%= link_to_function "Select All", "$('.energy_level_interval_date').attr('checked', true)" %> |
+  <%= link_to_function "Deselect All", "$('.energy_level_interval_date').attr('checked', false)" %>)
+  <br/>
+  <br/>
+  <%= f.hidden_field :schedule_id, :value => @schedule.id %>
+  <div>
+    <span style="width:100px">
+      <%= f.select :energy_level_id, EnergyLevel.order('elevel').collect{|e| [ "#{e.name}(#{e.elevel})", e.id]} %>
+    </span>
+    <div id="new_energy_level_interval" class="timerange" style="display:inline-block; width:80%"></div>
+    <%= f.hidden_field :start_at, :value => "9:00" %>
+    <%= f.hidden_field :end_at, :value => "17:00" %>
+  </div>
+  <div style="text-align:center">
+    <%= f.submit "Add New Energy Level Interval" %>
+  </div>
+<% end %>
+</div>
+
+<script type="text/javascript">
+    $("#new_energy_level_interval").slider({
+       range: true,
+       min: 0,
+       max: 1439,
+       values: [540, 1020],
+       step:30,
+       slide: function(event,ui){
+         var startTime = formatTime(ui.values[0]);
+         var endTime = formatTime(ui.values[1]);
+
+         var selector = "#"+this.id;
+
+         $('#energy_level_interval_start_at').val(formatTime(ui.values[0]));
+         $('#energy_level_interval_end_at').val(formatTime(ui.values[1]));
+
+       var delay = function() {
+         $(ui.handle).text(formatTime(ui.value));
+       };
+
+         // wait for the ui.handle to set its position
+         setTimeout(delay, 5);
+
+       }
+    });
+
+$('#new_energy_level_interval a:eq(0)').text( formatTime($('#new_energy_level_interval').slider('values', 0)));
+$('#new_energy_level_interval a:eq(1)').text( formatTime($('#new_energy_level_interval').slider('values', 1)));
+
+</script>

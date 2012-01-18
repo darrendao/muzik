@@ -139,4 +139,9 @@ class LocationsController < ApplicationController
     @location = Location.find(location_id)
     render "/locations/update_blacklisttable"
   end
+
+  # Handle ajax call for displaying energy level intervals for selected schedule
+  def refresh_energy_level_intervals
+    @schedule = Schedule.find(params[:selected_schedule])
+  end
 end

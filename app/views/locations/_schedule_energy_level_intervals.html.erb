@@ -1,0 +1,15 @@
+<% if @location.current_schedule.nil? %>
+  N/A
+<% else %>
+  <div id="chosen_schedule">
+  <%= form_tag url_for(:controller => 'locations', :action => 'refresh_energy_level_intervals'), :remote => true do %>
+    Showing energy levels for:
+    <%= select_tag 'selected_schedule', options_from_collection_for_select(@location.schedules, 'id', 'name', @location.current_schedule.id) %>
+    <%= submit_tag 'Refresh' %>
+  <% end %>
+  </div>
+  <div id="energy_level_intervals">
+    <%= render :partial => 'energy_level_intervals',
+               :locals => {:schedule => @location.current_schedule} %>
+  </div>
+<% end %>

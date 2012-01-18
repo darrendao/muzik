@@ -1,0 +1,16 @@
+<div id="energy_level_intervals">
+</div>
+
+<div id="add_energy_level_interval">
+<%= form_for :energy_level_interval, :method => :post do |f|%>
+  Energy Level: <%= f.select :energy_level_id, EnergyLevel.order('elevel').collect{|e| [ "#{e.name}(#{e.elevel})", e.id]} %>
+  from <%= f.text_field :start_at, :class => 'timefield' %>
+  to <%= f.text_field :end_at, :class => 'timefield' %>
+  <%= f.hidden_field :schedule_id, :value => @schedule.id %>
+  <%= f.submit "Add" %>
+<% end %>
+</div>
+
+<script type="text/javascript">
+  $('.timefield').timepicker({});
+</script>

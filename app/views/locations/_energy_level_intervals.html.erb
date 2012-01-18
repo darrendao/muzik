@@ -1,0 +1,21 @@
+<div>
+<% if schedule.energy_level_intervals.empty? %>
+  No energy level intervals available for this schedule.
+  <% if !schedule.is_default? %>
+    Energy levels from the default schedule will be used.
+  <% end %>
+<% else %>
+  <% schedule.energy_level_intervals_by_wday.each do |wday, elis| %>
+    <div style="padding-bottom:5px">
+    <strong><%= Date::DAYNAMES[wday] %></strong></strong><br/>
+    <% elis.each do |eli| %>
+      <%= render :partial => 'energy_level_wizard/energy_level_interval', :locals => {:eli => eli, :readonly => true} %>
+      <br/>
+    <% end %>
+    </div>
+  <% end %>
+<% end %>
+</div>
+<%= link_to jquery_ui_button_icon("Manage Energy Levels", "ui-icon-wrench", "addhs").html_safe ,
+            url_for(:controller => 'energy_level_wizard', :schedule_id => schedule.id) %>
+

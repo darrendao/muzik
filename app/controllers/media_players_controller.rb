@@ -118,8 +118,8 @@ class MediaPlayersController < ApplicationController
         result[:business_hours] = business_hours
         if location.group
           result[:group] = location.group
-          energy_level_intervals = location.group.energy_level_intervals
-          result[:energy_level_intervals] = energy_level_intervals
+          #energy_level_intervals = location.group.energy_level_intervals
+          #result[:energy_level_intervals] = energy_level_intervals
         end
       end
     end

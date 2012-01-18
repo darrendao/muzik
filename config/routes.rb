@@ -24,12 +24,21 @@ Muzik::Application.routes.draw do
   end
 
   resources :energy_levels
+  resources :energy_level_intervals
+
+  resources :energy_level_wizard do
+    collection do
+      post 'add_energy_level_interval'
+      post 'update_energy_level_intervals'
+    end
+  end
 
   resources :locations, :shallow => true do
     collection do
       get 'datatable'
       get 'delete'
       get 'blacklist_songs'
+      post 'refresh_energy_level_intervals'
     end
     resources :schedules
   end

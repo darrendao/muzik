@@ -3,16 +3,16 @@ class Group < ActiveRecord::Base
   has_many :group_song_assignments, :dependent => :destroy
   has_many :playlists
   has_many :locations
-  has_many :energy_level_intervals
   has_many :group_holiday_schedules
-  accepts_nested_attributes_for :energy_level_intervals, :allow_destroy => true,
-                                :reject_if => proc {|attrs|
-                                  attrs.any? {|k,v| v.blank?}
-                                }
+  #has_many :energy_level_intervals
+  #accepts_nested_attributes_for :energy_level_intervals, :allow_destroy => true,
+  #                              :reject_if => proc {|attrs|
+  #                                attrs.any? {|k,v| v.blank?}
+  #                              }
 
   # Given the time (in second since midnight), returns the appropriate energy level for that time
   # Returns nil if unknown
-  def energy_level_at(time)
+  def deprecated_energy_level_at(time)
     energy_level = nil
 
     energy_level_intervals.each do |eli|

@@ -28,6 +28,28 @@
   <%= @location.holiday_song_period.period if @location.holiday_song_period %>
 </p>
 
+<b>Holiday Schedules</b>
+<div class="infobox">
+  <div id="holiday_schedules" class="schedules">
+    <%= render :partial => '/schedules/list', :locals => {:schedules => @location.schedules.special} %>
+  </div>
+  <div id="add_special_schedule" style="display:none">
+    <%= render :partial => 'add_special_schedule' %>
+  </div>
+  <div id="add_special_schedule_link">
+    <%= link_to_function jquery_ui_button_icon("Add Holiday Schedules", "ui-icon-plusthick", "addhs").html_safe , "$('#add_special_schedule').show(); $('#add_special_schedule_link').hide()" %>
+  </div>
+</div>
+<br/>
+
+<p>
+  <b>Energy Level Intervals</b>
+  <div class="infobox">
+    <%= render :partial => 'schedule_energy_level_intervals' %>
+  </div>
+</p>
+
+<!--
 <p>
   <b>Business hours:</b><br/>
   <% @location.business_hours.each do |business_hour| %>
@@ -35,21 +57,8 @@
       to <%= business_hour.close_at.strftime("%H:%M") %><br/>
   <% end %>
 </p>
+-->
 <br />
-
-<h3>Holiday Schedules</h3>
-<div class="infobox">
-  <div id="holiday_schedules" class="schedules">
-    <%= render :partial => '/schedules/list', :locals => {:schedules => @location.schedules.special} %>
-  </div>
-  <div id="add_special_schedule" style="display:none">
-   <%= render :partial => 'add_special_schedule' %>
- </div>
- <div id="add_special_schedule_link">
-   <%= link_to_function jquery_ui_button_icon("Add Holiday Schedules", "ui-icon-plusthick", "addhs").html_safe , "$('#add_special_schedule').show(); $('#add_special_schedule_link').hide()" %>
-  </div>
-</div>
-<br/>
 
 <h3>Media Player Info</h3>
 <div id="media_player" class="infobox">

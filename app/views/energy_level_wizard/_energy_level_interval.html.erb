@@ -1,0 +1,45 @@
+<span style="padding-bottom:2px">
+<span style="width:100px;float:left">
+  <%= eli.energy_level.name %>
+</span>
+<div id="eli_slider_<%= eli.id %>"  style="display:inline-block; width:80%"></div>
+<% unless readonly %>
+<span>
+| <%= link_to('Delete', eli, :confirm => 'Are you sure?', :method => :delete) %>
+</span>
+<% end %>
+<%= hidden_field_tag "eli_slider_#{eli.id}_start_at", eli.start_at %>
+<%= hidden_field_tag "eli_slider_#{eli.id}_end_at", eli.end_at %>
+</span>
+
+
+<script type="text/javascript">
+  $("#eli_slider_<%= eli.id %>").slider({
+     range: true,
+     min: 0,
+     max: 1439,
+     values: [0, 300],
+     step: 30,
+     <% if readonly %>
+     disabled: true,
+     <% end %>
+     slide: function(event,ui){
+       var startTime = formatTime(ui.values[0]);
+       var endTime = formatTime(ui.values[1]);
+
+       var selector = "#"+this.id;
+       $(selector + "_start_at").val(formatTime(ui.values[0]));
+       $(selector + "_end_at").val(formatTime(ui.values[1]));
+
+       var delay = function() {
+          $(ui.handle).text(formatTime(ui.value));
+       };
+       // wait for the ui.handle to set its position
+       setTimeout(delay, 5);
+     }
+  });
+
+  $('#eli_slider_<%= eli.id %>').slider( "option", "values", [<%= eli.start_at_min %>, <%= eli.end_at_min %>] );
+  $('#eli_slider_<%= eli.id %> a:eq(0)').text( formatTime($('#eli_slider_<%= eli.id %>').slider('values', 0)));
+  $('#eli_slider_<%= eli.id %> a:eq(1)').text( formatTime($('#eli_slider_<%= eli.id %>').slider('values', 1)));
+</script>
