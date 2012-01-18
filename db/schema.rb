@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120111220542) do
+ActiveRecord::Schema.define(:version => 20120116075824) do
 
   create_table "black_lists", :force => true do |t|
     t.integer  "location_id"
@@ -30,12 +30,13 @@ ActiveRecord::Schema.define(:version => 20120111220542) do
   end
 
   create_table "energy_level_intervals", :force => true do |t|
-    t.integer  "group_id"
     t.integer  "energy_level_id"
     t.time     "start_at"
     t.time     "end_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "schedule_id"
+    t.integer  "wday"
   end
 
   create_table "energy_levels", :force => true do |t|
@@ -68,6 +69,13 @@ ActiveRecord::Schema.define(:version => 20120111220542) do
     t.datetime "updated_at"
   end
 
+  create_table "holiday_song_periods", :force => true do |t|
+    t.integer  "location_id"
+    t.integer  "period"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "locations", :force => true do |t|
     t.string   "address"
     t.string   "phone_number"
@@ -91,6 +99,15 @@ ActiveRecord::Schema.define(:version => 20120111220542) do
     t.integer  "group_id"
     t.date     "date"
     t.text     "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "schedules", :force => true do |t|
+    t.string   "name"
+    t.datetime "start_at"
+    t.datetime "end_at"
+    t.integer  "location_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
