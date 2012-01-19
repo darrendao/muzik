@@ -39,6 +39,8 @@ Muzik::Application.routes.draw do
       get 'delete'
       get 'blacklist_songs'
       post 'refresh_energy_level_intervals'
+      get 'energy_level_intervals'
+      get 'schedules'
     end
     resources :schedules
   end

@@ -144,4 +144,33 @@ class LocationsController < ApplicationController
   def refresh_energy_level_intervals
     @schedule = Schedule.find(params[:selected_schedule])
   end
+
+
+  # Return energy level intervals of the specified location for the given date range
+  # Used by client
+  def energy_level_intervals
+    result = {}
+    @location = Location.find(params[:location_id])
+    start_date = params[:start_date] ? Date.parse(params[:start_date]) : Date.today
+    end_date = params[:end_date] ? Date.parse(params[:end_date]) : Date.today
+
+    (start_date..end_date).each do |date|
+      result[date] = @location.energy_level_intervals(date)
+    end
+
+    render :json => result
+  end
+
+  # Used by client
+  # Return schedules of the specified location for the given date range
+  def schedules
+    result = {}
+    @location = Location.find(params[:location_id])
+    start_date = params[:start_date] ? Date.parse(params[:start_date]) : Date.today
+    end_date = params[:end_date] ? Date.parse(params[:end_date]) : Date.today
+    (start_date..end_date).each do |date|
+      result[date] = @location.schedule_at(date)
+    end
+    render :json => result
+  end
 end

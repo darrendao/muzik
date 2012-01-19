@@ -31,16 +31,37 @@ class Location < ActiveRecord::Base
   # Return the schedule for the current day
   def current_schedule
     today = Time.zone.now
-    schedules.special.each do |schedule|
-      if schedule.start_at <= today && today <= schedule.end_at
-        return schedule
-      end
-    end
-    return default_schedule
+    return schedule_at(today)
   end
 
   def default_schedule
     schedules.where(:name => "Default Schedule").first
   end
 
+  # Given a date, figure out what schedule this location has
+  def schedule_at(date)
+    schedules.special.each do |schedule|
+      if schedule.start_at <= date && date <= schedule.end_at
+        return schedule
+      end
+    end
+    return default_schedule
+  end
+
+  # return energy level intervals for the given date
+  def energy_level_intervals(date)
+    result = []
+    schedule = schedule_at(date)
+    elis = schedule.energy_level_intervals
+    if elis.nil? or elis.empty?
+      elis = default_schedule.energy_level_intervals
+    end
+
+    elis.each do |eli|
+      if eli.wday == date.wday
+        result << eli
+      end
+    end
+    return result
+  end
 end

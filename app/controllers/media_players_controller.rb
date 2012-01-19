@@ -114,6 +114,7 @@ class MediaPlayersController < ApplicationController
     if player
       location = player.location
       if location
+        result[:location] = location
         business_hours = location.business_hours
         result[:business_hours] = business_hours
         if location.group
