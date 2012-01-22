@@ -30,7 +30,8 @@ class Location < ActiveRecord::Base
 
   # Return the schedule for the current day
   def current_schedule
-    today = Time.zone.now
+    #today = Time.zone.now
+    today = Date.today
     return schedule_at(today)
   end
 
@@ -41,7 +42,8 @@ class Location < ActiveRecord::Base
   # Given a date, figure out what schedule this location has
   def schedule_at(date)
     schedules.special.each do |schedule|
-      if schedule.start_at <= date && date <= schedule.end_at
+      puts "Comparing #{schedule.inspect} and #{date.inspect}"
+      if schedule.start_at.to_date <= date && date <= schedule.end_at.to_date
         return schedule
       end
     end

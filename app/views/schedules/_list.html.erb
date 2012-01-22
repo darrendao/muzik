@@ -4,7 +4,7 @@
   <% schedules.each do |schedule| %>
     <%= schedule.start_at.strftime('%m/%d/%Y') %> to <%= schedule.end_at.strftime('%m/%d/%Y') %> : <%= schedule.name %>
     <% if schedule.is_holiday %>
-      <span style="background-color:red">Holiday</span>
+      <span style="background-color:red; padding:2px; color:white">Holiday</span>
     <% end %>
     ( <%= link_to 'Delete', schedule, :confirm => 'Are you sure?', :method => :delete, :remote => true %> |
       <%= link_to 'Edit', edit_schedule_path(schedule) %>

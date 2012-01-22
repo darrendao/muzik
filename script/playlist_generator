@@ -94,6 +94,7 @@ class PlaylistGenerator
     current_hour = start_time / (60*60)    # hours since midnight
     current_hour_songs = [] # list of songs that had been play for this hour
     current_time_energy_level = energy_level_at(date, current_time)
+
     schedule = @schedules[date.to_s]
 
     if schedule.nil?
@@ -141,20 +142,28 @@ class PlaylistGenerator
       current_time += candidate['duration']
       songs_counter = songs.size
 
+      puts "add #{playlist_entry['title']} -- #{playlist_entry['energy_level']} -- playlistsize #{playlist.entries.size}"
+
       # See if at the end of this song, we're in a new hour. If so, then re-initialize things
       new_hour = current_time / (60*60)
       if new_hour > current_hour
         current_hour_songs = []
         current_time_energy_level = energy_level_at(date, current_time)
-
-        # If this is during a holiday, then play holiday song if it's time to do so
-        if schedule['is_holiday'] && (playlist.entries.size % @holiday_song_period == 0)
-          current_time_energy_level = holidayize_energy_level(current_time_energy_level)
-        end
-
         current_hour = new_hour
       end
       current_hour_songs << candidate
+
+      # If this is during a holiday, then play holiday song if it's time to do so
+      if schedule['is_holiday']
+        if (playlist.entries.size % @holiday_song_period == 0)
+          current_time_energy_level = holidayize_energy_level(current_time_energy_level)
+        # Revert back to normal energy level
+        elsif (playlist.entries.size % @holiday_song_period == 1)
+          current_time_energy_level = energy_level_at(date, current_time)
+        end
+      end
+
+      puts "current energy level is now #{current_time_energy_level.inspect}"
 
       # See if we're done
       if current_time >= end_time
