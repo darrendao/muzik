@@ -141,9 +141,14 @@ class GroupSongAssignmentsController < ApplicationController
       gsas << GroupSongAssignment.new(:song_id => song.id, :group_id => group.id, :energy_level_id => energy_level.id)
     end
 
+    # Delete old song assignment (only delete the one of the same energy level)
+    group.group_song_assignments.where(:energy_level_id => energy_level.id).delete_all
+
     # Create group_song_assignments. This will also blow out the old assignments
     # TODO: figure out how to mass delete and mass insert to speed things up
-    group.group_song_assignments = gsas
+    gsas.each do |gsa|
+      group.group_song_assignments << gsa
+    end
   end
 
   def create_song(song_hash)

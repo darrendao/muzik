@@ -28,7 +28,7 @@
   <%= @location.holiday_song_period.period if @location.holiday_song_period %>
 </p>
 
-<b>Holiday Schedules</b>
+<b>Special Event Schedules</b>
 <div class="infobox">
   <div id="holiday_schedules" class="schedules">
     <%= render :partial => '/schedules/list', :locals => {:schedules => @location.schedules.special} %>
@@ -36,8 +36,9 @@
   <div id="add_special_schedule" style="display:none">
     <%= render :partial => 'add_special_schedule' %>
   </div>
+  <br/>
   <div id="add_special_schedule_link">
-    <%= link_to_function jquery_ui_button_icon("Add Holiday Schedules", "ui-icon-plusthick", "addhs").html_safe , "$('#add_special_schedule').show(); $('#add_special_schedule_link').hide()" %>
+    <%= link_to_function jquery_ui_button_icon("Add Special Event Schedules", "ui-icon-plusthick", "addhs").html_safe , "$('#add_special_schedule').show(); $('#add_special_schedule_link').hide()" %>
   </div>
 </div>
 <br/>

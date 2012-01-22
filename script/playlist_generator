@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'rubygems'
-require 'facter'
+#require 'facter'
 require 'optparse'
 require 'rest-client'
 require 'json'
@@ -29,10 +29,13 @@ end
 
 class PlaylistGenerator
   def initialize(options)
-    @energy_level_intervals = options[:energy_level_intervals] || []
+    @energy_levels = options[:energy_levels]
+    @energy_level_intervals = options[:energy_level_intervals] || {}
+    @schedules = options[:schedules] || {}
+    @holiday_song_period = options[:holiday_song_period] || 5
 
     # Update intervals to be in seconds to make it easier to calculate later on
-    @energy_level_intervals.each do |eli|
+    @energy_level_intervals.values.flatten.each do |eli|
       start_at =  Time.parse(eli['start_at'])
       end_at =  Time.parse(eli['end_at'])
       start_at = start_at.hour * 60 * 60 + start_at.min * 60 + start_at.sec
@@ -42,9 +45,11 @@ class PlaylistGenerator
     end
   end
 
-  def energy_level_at(time)
+  # time is seconds since midnight
+  def energy_level_at(date, time)
     energy_level = nil
-    @energy_level_intervals.each do |eli|
+    @energy_level_intervals[date.to_s].each do |eli|
+      next if eli['wday'] != date.wday
       if eli['start_at'] <= time and time <= eli['end_at']
         energy_level = eli['energy_level_id']
         break
@@ -53,27 +58,60 @@ class PlaylistGenerator
     energy_level
   end
 
-  def generate(songs, previous_playlist, start_time=0, end_time = 86400)
+  # Given the energy_level_id, figure out what is its holiday
+  # counter-part. This method assumes the regular energy levels are named E1, E2, etc. and the holiday energy levels
+  # are named H1, H2, etc
+  def holidayize_energy_level(energy_level_id)
+    energy_level_name = nil
+    @energy_levels.each do |energy_level|
+      if energy_level['id'] == energy_level_id
+        energy_level_name = energy_level['name']
+        break
+      end
+    end
+
+    # Can't do anythign if we can't find the specified energy level
+    return nil unless energy_level_name
+
+    # parse the name to get the numerical value
+    # Can't do anything if the name isn't of the correct standard
+    return nil if energy_level_name !~ /E(\d+)/
+
+    holiday_energy_level_name = "H#{$1}"
+    @energy_levels.each do |energy_level|
+      return energy_level['id'] if energy_level['name'] == holiday_energy_level_name
+    end
+
+    # can't find the corresponding holiday energy level
+    return nil
+  end
+
+  def generate(songs, previous_playlist, date, start_time=0, end_time = 86400)
     songs.shuffle!
     playlist = Playlist.new
     songs_counter = songs.size
     current_time = start_time              # seconds since midnight
     current_hour = start_time / (60*60)    # hours since midnight
     current_hour_songs = [] # list of songs that had been play for this hour
-    current_time_energy_level = energy_level_at(current_time)
+    current_time_energy_level = energy_level_at(date, current_time)
+    schedule = @schedules[date.to_s]
+
+    if schedule.nil?
+      raise "Trying to generate playlist for #{date} but unable to figure out what schedule to use."
+    end
 
     while candidate = songs.shift
       #puts "Current energy level is #{current_time_energy_level.inspect}"
       songs_counter = songs_counter - 1
       if songs_counter < 0
         puts "OH NO... ran out of songs"
-        return nil
+        return playlist
       end
+
 
       # Don't play songs of the same artist or album that have been played during the last hour
       if current_hour_songs.any?{|song| song['artist'] == candidate['artist'] or song['album'] == candidate['album']}
-        #logger.debug "Skipping #{candidate.title} because of artist or album conflict"
-        puts "Skipping #{candidate.inspect} because of artist or album conflict"
+        # puts "Skipping #{candidate.inspect} because of artist or album conflict"
         songs.push(candidate)
         next
       end
@@ -82,7 +120,7 @@ class PlaylistGenerator
       # If no energy level specified for current time, then we don't care
       song_energy_level = candidate['energy_level_id']
       if current_time_energy_level && current_time_energy_level != song_energy_level
-        puts "Skipping #{candidate.inspect} because of energy level conflict. Song energy level is #{song_energy_level}"
+        # puts "Skipping #{candidate.inspect} because of energy level conflict. Song energy level is #{song_energy_level}"
         songs.push(candidate)
         next
       end
@@ -97,7 +135,6 @@ class PlaylistGenerator
       end
 
       # All conditions meet. Add song to playlist
-      #puts "FOUND A SOLUTION FOR TImE #{current_time}"
       playlist_entry = candidate.clone
       playlist_entry['timestamp'] = current_time.to_i
       playlist.entries << playlist_entry
@@ -108,7 +145,13 @@ class PlaylistGenerator
       new_hour = current_time / (60*60)
       if new_hour > current_hour
         current_hour_songs = []
-        current_time_energy_level = energy_level_at(current_time)
+        current_time_energy_level = energy_level_at(date, current_time)
+
+        # If this is during a holiday, then play holiday song if it's time to do so
+        if schedule['is_holiday'] && (playlist.entries.size % @holiday_song_period == 0)
+          current_time_energy_level = holidayize_energy_level(current_time_energy_level)
+        end
+
         current_hour = new_hour
       end
       current_hour_songs << candidate
@@ -174,14 +217,35 @@ server_url = options[:server_url] || "http://50.56.218.230"
 serial = options[:serial] || get_serial
 playlist_dir = options[:playlist_dir] || "."
 playlist_file = File.join(playlist_dir, 'playlist.json')
+start_date = Date.today
+days = options[:days] || 1
+end_date = start_date + days - 1
 
 if serial.nil?
   raise "Unable to determine serial number"
 end
 
-# Get energy level intervals
+# Get location info
 response = RestClient.get File.join(server_url, "media_players/location_info.json"), {:params => {:serial => serial}}
-energy_level_intervals = JSON.parse(response.body)['energy_level_intervals']
+location = JSON.parse(response.body)['location']
+location_id = location['id']
+holiday_song_period = location['holiday_song_period']
+
+# Get energy levels
+response = RestClient.get File.join(server_url, "energy_levels.json")
+energy_levels = JSON.parse(response.body)
+
+# Get energy level intervals
+response = RestClient.get File.join(server_url, "locations/energy_level_intervals.json"),
+                                    {:params => {:location_id => location_id,
+                                                 :start_date => start_date, :end_date => end_date}}
+energy_level_intervals = JSON.parse(response.body)
+
+# Get schedule info
+response = RestClient.get File.join(server_url, "locations/schedules.json"),
+                                    {:params => {:location_id => location_id,
+                                                 :start_date => start_date, :end_date => end_date}}
+schedules = JSON.parse(response.body)
 
 # Get songs library
 response = RestClient.get File.join(server_url, "media_players/songs_library.json"), {:params => {:serial => serial}}
@@ -212,15 +276,13 @@ else
   previous_playlist = nil
 end
 
-puts "Previous play list is #{previous_playlist}"
-
 # Start generating playlist
-date = Date.today
-days = options[:days] || 1
-generator = PlaylistGenerator.new(:energy_level_intervals => energy_level_intervals)
-(0...days).each do |day|
-  date = date + day
-  playlist = generator.generate(songs.clone, previous_playlist)
+generator = PlaylistGenerator.new(:energy_level_intervals => energy_level_intervals,
+                                  :energy_levels => energy_levels,
+                                  :schedules => schedules,
+                                  :holiday_song_period => holiday_song_period)
+(start_date..end_date).each do |date|
+  playlist = generator.generate(songs.clone, previous_playlist, date)
   result[date] = playlist.entries if playlist
   previous_playlist = playlist
 end

@@ -145,9 +145,8 @@ class LocationsController < ApplicationController
     @schedule = Schedule.find(params[:selected_schedule])
   end
 
-
-  # Return energy level intervals of the specified location for the given date range
   # Used by client
+  # Return energy level intervals of the specified location for the given date range
   def energy_level_intervals
     result = {}
     @location = Location.find(params[:location_id])

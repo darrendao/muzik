@@ -1,8 +1,11 @@
 <% if schedules.nil? or schedules.empty? %>
-  There is no holiday schedule.
+  There is no schedule.
 <% else %>
   <% schedules.each do |schedule| %>
     <%= schedule.start_at.strftime('%m/%d/%Y') %> to <%= schedule.end_at.strftime('%m/%d/%Y') %> : <%= schedule.name %>
+    <% if schedule.is_holiday %>
+      <span style="background-color:red">Holiday</span>
+    <% end %>
     ( <%= link_to 'Delete', schedule, :confirm => 'Are you sure?', :method => :delete, :remote => true %> |
       <%= link_to 'Edit', edit_schedule_path(schedule) %>
     ) <br/>
