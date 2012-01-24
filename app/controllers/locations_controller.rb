@@ -63,6 +63,9 @@ class LocationsController < ApplicationController
       end
     end
 
+    default_schedule = Schedule.new(:name => 'Default Schedule')
+    @location.schedules << default_schedule
+
     respond_to do |format|
       if @location.save
         format.html { redirect_to @location, :notice => 'Location was successfully created.' }
