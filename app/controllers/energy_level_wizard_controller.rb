@@ -5,6 +5,13 @@ class EnergyLevelWizardController < ApplicationController
   end
 
   def add_energy_level_interval
+    if params[:dates].nil? or params[:dates].empty?
+      flash[:alert] = 'You need to select at least one day'
+      redirect_to :action => 'index',
+                  :schedule_id => params[:energy_level_interval][:schedule_id]
+      return
+    end
+
     success = true
     dates = params[:dates]
     dates.each do |date|
@@ -18,9 +25,9 @@ class EnergyLevelWizardController < ApplicationController
     respond_to do |format|
       if success
         format.html {
+          flash[:notice] = 'Energy level interval was successfully created.'
           redirect_to :action => 'index',
-                      :schedule_id => params[:energy_level_interval][:schedule_id],
-                      :notice => 'Energy level interval was successfully created.'
+                      :schedule_id => params[:energy_level_interval][:schedule_id]
         }
         format.json { render :json => @energy_level, :status => :created, :location => @energy_level }
       else

@@ -97,7 +97,7 @@ class GroupSongAssignmentsController < ApplicationController
 
   def upload_itunes_plist
     return if !params[:group_song_assignment]
-    
+
     songs = parse_itunes_plist(params[:group_song_assignment][:uploaded_itunes_plist])
 
     tmp = parse_itunes_plist_filename(params[:group_song_assignment][:uploaded_itunes_plist].original_filename)
@@ -155,7 +155,12 @@ class GroupSongAssignmentsController < ApplicationController
     artist = song_hash['Artist']
     album = song_hash['Album']
     title = song_hash['Name']
-    filename = "#{Tpg::Utils::md5_from_meta([artist, album, title])}.mp3"
+
+    artist = "MISSING" if artist.nil? or artist.empty?
+    album = "MISSING" if album.nil? or album.empty?
+    title = "MISSING" if title.nil? or title.empty?
+
+    filename = "#{Tpg::Utils::md5_from_meta([title, artist, album])}.mp3"
     Song.create(:title => title,
                 :belongs_to_album => album,
                 :artist => artist,

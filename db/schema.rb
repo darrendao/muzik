@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120116075824) do
+ActiveRecord::Schema.define(:version => 20120119215721) do
 
   create_table "black_lists", :force => true do |t|
     t.integer  "location_id"
@@ -110,6 +110,7 @@ ActiveRecord::Schema.define(:version => 20120116075824) do
     t.integer  "location_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "is_holiday"
   end
 
   create_table "songs", :force => true do |t|

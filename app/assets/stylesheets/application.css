@@ -162,6 +162,21 @@ body {
     margin-bottom: 1em;
 }
 
+.notice
+{
+    text-align: center;
+    padding: 2px;
+    background-color: #33FF66;
+}
+
+.alert
+{
+    text-align: center;
+    padding: 2px;
+    background-color: #CC3333;
+    color: #FFFFFF;
+}
+
 
 /* css for timepicker */
 .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
