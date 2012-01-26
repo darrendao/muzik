@@ -111,16 +111,17 @@ class MediaPlayersController < ApplicationController
     location = nil
     player = find_media_player(params)
 
+    start_date = params[:start_date] ? Date.parse(params[:start_date]) : Date.today
+    end_date = params[:end_date] ? Date.parse(params[:end_date]) : Date.today + 6
+
     if player
       location = player.location
       if location
         result[:location] = location
-        business_hours = location.business_hours
-        result[:business_hours] = business_hours
+        store_hours = location.store_hours_epoch(start_date, end_date)
+        result[:store_hours_epoch] = store_hours
         if location.group
           result[:group] = location.group
-          #energy_level_intervals = location.group.energy_level_intervals
-          #result[:energy_level_intervals] = energy_level_intervals
         end
       end
     end

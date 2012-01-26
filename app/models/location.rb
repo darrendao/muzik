@@ -66,4 +66,25 @@ class Location < ActiveRecord::Base
     end
     return result
   end
+
+  def store_hours_epoch(start_date, end_date)
+    result = []
+    (start_date..end_date).each do |date|
+      elis = energy_level_intervals(date)
+      elis.each do |eli|
+        store_hour = {
+                       :close_at => convert_to_epoch(date, eli.end_at),
+                       :open_at => convert_to_epoch(date, eli.start_at)
+                     }
+        result << store_hour
+      end
+    end
+    result.sort_by{|time| time[:open_at]}
+  end
+
+  private
+  # This assume the Rails app is using UTC
+  def convert_to_epoch(date, time)
+    Time.parse(date.to_s).to_i + time.hour * 60 * 60 + time.min * 60 + time.sec
+  end
 end
