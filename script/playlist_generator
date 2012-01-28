@@ -198,6 +198,20 @@ def save_playlist(playlist, outfile)
   end
 end
 
+def save_playlist_epoch(playlist, outfile)
+  puts "Converting to epoch. Saving to #{outfile}"
+  result = []
+  playlist.each do |date, songs|
+    songs.each do |song|
+      epoch_time = Time.parse(date.to_s).to_i + song['timestamp']
+      song['timestamp'] = epoch_time
+      result << song
+    end
+  end
+
+  File.open(outfile, 'w') {|f| f.write(result.to_json)}
+end
+
 options = {}
 opts = OptionParser.new
 opts.banner="Usage: playlist_generator [options]"
@@ -225,7 +239,8 @@ opts.parse(ARGV)
 server_url = options[:server_url] || "http://50.56.218.230"
 serial = options[:serial] || get_serial
 playlist_dir = options[:playlist_dir] || "."
-playlist_file = File.join(playlist_dir, 'playlist.json')
+playlist_file = File.join(playlist_dir, 'playlist.json.old_format')
+epoch_playlist_file = File.join(playlist_dir, 'playlist.json')
 start_date = Date.today
 days = options[:days] || 1
 end_date = start_date + days - 1
@@ -298,4 +313,5 @@ end
 
 if result
   save_playlist(result, playlist_file)
+  save_playlist_epoch(result, epoch_playlist_file)
 end
