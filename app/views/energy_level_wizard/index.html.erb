@@ -31,7 +31,7 @@ Add new energy level interval
   <%= f.hidden_field :schedule_id, :value => @schedule.id %>
   <div>
     <span style="width:100px">
-      <%= f.select :energy_level_id, EnergyLevel.order('elevel').collect{|e| [ "#{e.name}(#{e.elevel})", e.id]} %>
+      <%= f.select :energy_level_id, EnergyLevel.non_holiday.collect{|e| [ e.name, e.id]} %>
     </span>
     <div id="new_energy_level_interval" class="timerange" style="display:inline-block; width:80%"></div>
     <%= f.hidden_field :start_at, :value => "9:00" %>

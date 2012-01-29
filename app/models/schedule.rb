@@ -9,7 +9,7 @@ class Schedule < ActiveRecord::Base
       result[eli.wday] ||= []
       result[eli.wday] << eli
     end
-    result
+    result.sort
   end
 
   def is_default?
